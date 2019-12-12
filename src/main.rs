@@ -11,6 +11,7 @@ fn main() {
         .subcommand(confirm::init_cli_command())
         .subcommand(autocomplete::init_cli_command())
         .subcommand(checkbox::init_cli_command())
+        .subcommand(list::init_cli_command())
         .get_matches();
 
     match matches.subcommand() {
@@ -19,6 +20,7 @@ fn main() {
         ("confirm", Some(confirm_matches)) => confirm::run(confirm_matches),
         ("autocomplete", Some(autocomplete_matches)) => autocomplete::run(autocomplete_matches),
         ("checkbox", Some(checkbox_matches)) => checkbox::run(checkbox_matches),
+        ("list", Some(list_matches)) => list::run(list_matches),
         _ => println!("Ops. No command found"),
     }
 }
