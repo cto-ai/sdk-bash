@@ -2,11 +2,17 @@
 
 # Input
 
-# ./target/debug/bash-sdk input -a --message "Some message" --name "input name" --default-value Value
+# ./target/debug/bash-sdk input -a \
+#   --message "Some message" \
+#   --name "input name" \
+#   --default-value Value
 
 # Editor
 
-# ./target/debug/bash-sdk editor --message "Some message" --name "input name" --default-value Value
+# ./target/debug/bash-sdk editor \
+#    --message "Some message" \
+#    --name "input name" \
+#    --default-value Value
 
 # Confirm
 
@@ -53,10 +59,30 @@
 # Formats "2019-12-11T21:37:12-08:00" or "2019-12-11T13:39:37Z"
 # date -u +%FT%TZ
 
-./target/debug/bash-sdk datetime \
-  -n "datetime" \
-  -m "Datetime Message" \
-  -d "2019-12-20T00:00:00-08:00" \
-  --min "2019-12-11T00:00:00-08:00" \
-  --max "2019-12-28T00:00:00-08:00" \
-  --variant "date"
+# ./target/debug/bash-sdk datetime \
+#   -n "datetime" \
+#   -m "Datetime Message" \
+#   -d "2019-12-20T00:00:00-08:00" \
+#   --min "2019-12-11T00:00:00-08:00" \
+#   --max "2019-12-28T00:00:00-08:00" \
+#   --variant "date"
+
+# Number
+
+# ./target/debug/bash-sdk number \
+#   -n "number" \
+#   -m "Number Message" \
+#   -d 5 \
+#   --min 1 \
+#   --max 10 \
+
+# Password
+
+# ./target/debug/bash-sdk password \
+#   -n "password" \
+#   -m "Password Message" \
+#   --confirm
+
+# Secret
+
+./target/debug/bash-sdk secret -n "secret" -m "Secret Message"

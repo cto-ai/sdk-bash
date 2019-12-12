@@ -1,7 +1,7 @@
 use clap::{App, Arg};
 use ops_sdk::ux::prompt::Autocomplete;
 
-// Init the cli commands fot the Autocomplete prompt
+// Init the cli commands for the Autocomplete prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("autocomplete")
         .about("It starts a new autocomplete prompt")

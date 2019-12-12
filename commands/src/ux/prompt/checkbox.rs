@@ -1,7 +1,7 @@
 use clap::{App, Arg};
 use ops_sdk::ux::prompt::Checkbox;
 
-// Init the cli commands fot the Checkbox prompt
+// Init the cli commands for the Checkbox prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("checkbox")
         .about("It starts a new checkbox prompt")

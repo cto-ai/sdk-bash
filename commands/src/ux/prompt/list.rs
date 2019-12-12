@@ -1,7 +1,7 @@
 use clap::{App, Arg};
 use ops_sdk::ux::prompt::List;
 
-// Init the cli commands fot the List prompt
+// Init the cli commands for the List prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("list")
         .about("It starts a new list prompt")
