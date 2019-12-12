@@ -5,3 +5,6 @@ pub mod datetime;
 pub mod editor;
 pub mod input;
 pub mod list;
+pub mod number;
+pub mod password;
+pub mod secret;

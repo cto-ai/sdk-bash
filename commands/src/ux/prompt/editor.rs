@@ -1,7 +1,7 @@
 use clap::{App, Arg};
 use ops_sdk::ux::prompt::Editor;
 
-// Init the cli commands fot the Editor prompt
+// Init the cli commands for the Editor prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("editor")
         .about("It starts a new editor prompt")

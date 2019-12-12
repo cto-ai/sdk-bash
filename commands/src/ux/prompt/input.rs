@@ -1,7 +1,7 @@
 use clap::{App, Arg};
 use ops_sdk::ux::prompt::Input;
 
-// Init the cli commands fot the input prompt
+// Init the cli commands for the input prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("input")
         .about("It starts a new input prompt")

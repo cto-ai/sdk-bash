@@ -2,7 +2,7 @@ use chrono;
 use clap::{App, Arg};
 use ops_sdk::ux::prompt::Datetime;
 
-// Init the cli commands fot the datetime prompt
+// Init the cli commands for the datetime prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("datetime")
         .about("It starts a new datetime prompt")

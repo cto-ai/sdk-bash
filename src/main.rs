@@ -13,6 +13,9 @@ fn main() {
         .subcommand(checkbox::init_cli_command())
         .subcommand(list::init_cli_command())
         .subcommand(datetime::init_cli_command())
+        .subcommand(number::init_cli_command())
+        .subcommand(password::init_cli_command())
+        .subcommand(secret::init_cli_command())
         .get_matches();
 
     match matches.subcommand() {
@@ -23,6 +26,9 @@ fn main() {
         ("checkbox", Some(checkbox_matches)) => checkbox::run(checkbox_matches),
         ("list", Some(list_matches)) => list::run(list_matches),
         ("datetime", Some(datetime_matches)) => datetime::run(datetime_matches),
+        ("number", Some(number_matches)) => number::run(number_matches),
+        ("password", Some(password_matches)) => password::run(password_matches),
+        ("secret", Some(secret_matches)) => secret::run(secret_matches),
         _ => println!("Ops. No command found"),
     }
 }

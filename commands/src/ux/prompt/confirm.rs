@@ -1,7 +1,7 @@
 use clap::{App, Arg};
 use ops_sdk::ux::prompt::Confirm;
 
-// Init the cli commands fot the Confirm prompt
+// Init the cli commands for the Confirm prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("confirm")
         .about("It starts a new confirm prompt")
