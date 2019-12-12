@@ -35,7 +35,15 @@
 
 # Checkout
 
-cat list_fixture/list.txt | tr "\n" " " | xargs ./target/debug/bash-sdk checkbox \
-  -n "checkout" \
-  -m "Checkout Message" \
+# cat list_fixture/list.txt | tr "\n" " " | xargs ./target/debug/bash-sdk checkbox \
+#   -n "checkout" \
+#   -m "Checkout Message" \
+#   -c
+
+# List
+
+cat list_fixture/list.txt | tr "\n" " " | xargs ./target/debug/bash-sdk list \
+  -n "list" \
+  -m "List Message" \
+  -d  "item 1" \
   -c
