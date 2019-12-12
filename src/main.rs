@@ -10,6 +10,7 @@ fn main() {
         .subcommand(editor::init_cli_command())
         .subcommand(confirm::init_cli_command())
         .subcommand(autocomplete::init_cli_command())
+        .subcommand(checkbox::init_cli_command())
         .get_matches();
 
     match matches.subcommand() {
@@ -17,6 +18,7 @@ fn main() {
         ("editor", Some(editor_matches)) => editor::run(editor_matches),
         ("confirm", Some(confirm_matches)) => confirm::run(confirm_matches),
         ("autocomplete", Some(autocomplete_matches)) => autocomplete::run(autocomplete_matches),
+        ("checkbox", Some(checkbox_matches)) => checkbox::run(checkbox_matches),
         _ => println!("Ops. No command found"),
     }
 }
