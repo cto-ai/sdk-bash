@@ -27,8 +27,15 @@
 #   -d  file1.js \
 #   -c
 
-cat list_fixture/list.txt | tr "\n" " " | xargs ./target/debug/bash-sdk autocomplete \
-  -n "autocomplete" \
-  -m "Autocomplete Message" \
-  -d  "item 1" \
+# cat list_fixture/list.txt | tr "\n" " " | xargs ./target/debug/bash-sdk autocomplete \
+#   -n "autocomplete" \
+#   -m "Autocomplete Message" \
+#   -d  "item 1" \
+#   -c
+
+# Checkout
+
+cat list_fixture/list.txt | tr "\n" " " | xargs ./target/debug/bash-sdk checkbox \
+  -n "checkout" \
+  -m "Checkout Message" \
   -c
