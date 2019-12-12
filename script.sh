@@ -42,8 +42,21 @@
 
 # List
 
-cat list_fixture/list.txt | tr "\n" " " | xargs ./target/debug/bash-sdk list \
-  -n "list" \
-  -m "List Message" \
-  -d  "item 1" \
-  -c
+# cat list_fixture/list.txt | tr "\n" " " | xargs ./target/debug/bash-sdk list \
+#   -n "list" \
+#   -m "List Message" \
+#   -d  "item 1" \
+#   -c
+
+# Datetime
+# $(date +%Y-%m-%dT%H:%M:%S%Z)
+# Formats "2019-12-11T21:37:12-08:00" or "2019-12-11T13:39:37Z"
+# date -u +%FT%TZ
+
+./target/debug/bash-sdk datetime \
+  -n "datetime" \
+  -m "Datetime Message" \
+  -d "2019-12-20T00:00:00-08:00" \
+  --min "2019-12-11T00:00:00-08:00" \
+  --max "2019-12-28T00:00:00-08:00" \
+  --variant "date"
