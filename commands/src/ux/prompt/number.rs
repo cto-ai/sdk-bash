@@ -73,6 +73,6 @@ fn parse_number_for(matches: &clap::ArgMatches, cmd: &str) -> i32 {
         .value_of(cmd)
         .unwrap()
         .parse()
-        .expect("Could not read numnber.");
+        .expect("Could not read number.");
     value
 }

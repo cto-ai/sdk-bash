@@ -97,16 +97,16 @@
 
 # Progress Bar
 
-# ./target/debug/bash-sdk progressbar start -l 5 -m "Downloading"
-#
-# for ((i=1;i<=5;++i))
-# do
-#   sleep 1
-#   ./target/debug/bash-sdk progressbar advance
-# done
-#
-# ./target/debug/bash-sdk progressbar stop
+./target/debug/bash-sdk progressbar start -l 5 -m Downloading
+
+for ((i=1;i<=5;++i))
+do
+  sleep 1
+  ./target/debug/bash-sdk progressbar advance
+done
+
+./target/debug/bash-sdk progressbar stop -m Download Done!
 
 # Print
 
-./target/debug/bash-sdk print some text
+# ./target/debug/bash-sdk print some text
