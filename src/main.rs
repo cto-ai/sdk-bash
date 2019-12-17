@@ -66,8 +66,8 @@ fn main() {
         },
         ("progressbar", Some(progressbar_matches)) => match progressbar_matches.subcommand() {
             ("start", Some(start_matches)) => progressbar::start::run(start_matches),
-            ("advance", Some(_)) => progressbar::advance::run(),
-            ("stop", Some(_)) => progressbar::stop::run(),
+            ("advance", Some(advance_matches)) => progressbar::advance::run(advance_matches),
+            ("stop", Some(stop_matches)) => progressbar::stop::run(stop_matches),
             _ => println!("Oops. No progress bar command found"),
         },
         ("print", Some(print_matches)) => print::run(print_matches),
