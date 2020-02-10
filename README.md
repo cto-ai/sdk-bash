@@ -142,3 +142,17 @@ $ bash-sdk progressbar stop -m Download Done!
 ```shell
 $ bash-sdk print some text
 ```
+
+# Secrets
+
+## Get
+
+```shell
+# bash-sdk secrets get -n name
+```
+
+## Set
+
+```shell
+# bash-sdk secrets set -n name -s secret
+```

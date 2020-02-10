@@ -3,6 +3,7 @@ use commands::ux::print;
 use commands::ux::progressbar;
 use commands::ux::prompt::*;
 use commands::ux::spinner;
+use commands::ux::secrets;
 
 fn main() {
     let matches = App::new("Bash SDK")
@@ -43,6 +44,12 @@ fn main() {
                     .multiple(true),
             ),
         )
+        .subcommand(
+            App::new("secrets")
+                .about("Secrets Commands.")
+                .subcommand(secrets::get::init_cli_command())
+                .subcommand(secrets::set::init_cli_command()),
+        )
         .get_matches();
 
     match matches.subcommand() {
@@ -58,6 +65,11 @@ fn main() {
             ("password", Some(password_matches)) => password::run(password_matches),
             ("secret", Some(secret_matches)) => secret::run(secret_matches),
             _ => println!("Oops. No prompt found"),
+        },
+        ("secrets", Some(secrets_matches)) => match secrets_matches.subcommand() {
+            ("get", Some(get_matches)) => secrets::get::run(get_matches),
+            ("set", Some(set_matches)) => secrets::set::run(set_matches),
+            _ => println!("Oops. No secrets command found"),
         },
         ("spinner", Some(spinner_matches)) => match spinner_matches.subcommand() {
             ("start", Some(start_matches)) => spinner::start::run(start_matches),
