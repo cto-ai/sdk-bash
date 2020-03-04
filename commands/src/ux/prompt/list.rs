@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::List;
+use cto_ai::ux::prompt::List;
 
 // Init the cli commands for the List prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -60,6 +60,6 @@ pub fn run(list_matches: &clap::ArgMatches) {
         list = list.default_value(default_value);
     }
 
-    let final_value = list.execute();
+    let final_value = list.execute().unwrap();
     println!("{}", final_value);
 }

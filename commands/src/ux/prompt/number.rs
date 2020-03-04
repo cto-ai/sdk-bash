@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Number;
+use cto_ai::ux::prompt::Number;
 
 // Init the cli commands for the number prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -64,7 +64,7 @@ pub fn run(number_matches: &clap::ArgMatches) {
         number = number.max(parsed_number);
     }
 
-    let final_value = number.execute();
+    let final_value = number.execute().unwrap();
     println!("{}", final_value);
 }
 

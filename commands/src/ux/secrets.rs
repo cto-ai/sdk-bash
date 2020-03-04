@@ -1,6 +1,6 @@
 pub mod get {
     use clap::{App, Arg};
-    use ops_sdk::ux::secrets;
+    use cto_ai::ux::secrets;
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
         App::new("get")
@@ -17,14 +17,14 @@ pub mod get {
 
     pub fn run(matches: &clap::ArgMatches) {
         let name = matches.value_of("name").unwrap();
-        let final_value = secrets::Secrets::new().get(name);
+        let final_value = secrets::Secrets::new().get(name).unwrap();
         println!("{}", final_value)
     }
 }
 
 pub mod set {
     use clap::{App, Arg};
-    use ops_sdk::ux::secrets;
+    use cto_ai::ux::secrets;
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
         App::new("set")
@@ -51,7 +51,7 @@ pub mod set {
         let name = matches.value_of("name").unwrap();
         let secret = matches.value_of("secret").unwrap();
 
-        let final_value = secrets::Secrets::new().set(name, secret);
+        let final_value = secrets::Secrets::new().set(name, secret).unwrap();
         println!("{}", final_value)
     }
 }

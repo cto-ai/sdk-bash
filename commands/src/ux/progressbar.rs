@@ -1,6 +1,6 @@
 pub mod start {
     use clap::{App, Arg};
-    use ops_sdk::ux::progress_bar;
+    use cto_ai::ux::progress_bar;
 
     // Init the cli commands for progressbar start
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -72,7 +72,7 @@ pub mod start {
 
 pub mod advance {
     use clap::{App, Arg};
-    use ops_sdk::ux::progress_bar;
+    use cto_ai::ux::progress_bar;
 
     // Init the cli commands for progressbar start
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -103,7 +103,7 @@ pub mod advance {
 
 pub mod stop {
     use clap::{App, Arg};
-    use ops_sdk::ux::progress_bar;
+    use cto_ai::ux::progress_bar;
 
     // Init the cli commands for progressbar start
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {

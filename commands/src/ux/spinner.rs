@@ -1,6 +1,6 @@
 pub mod start {
     use clap::{App, Arg};
-    use ops_sdk::ux::spinner;
+    use cto_ai::ux::spinner;
 
     // Init the cli commands for spinner start
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -23,7 +23,7 @@ pub mod start {
 
 pub mod stop {
     use clap::{App, Arg};
-    use ops_sdk::ux::spinner;
+    use cto_ai::ux::spinner;
 
     // Init the cli commands for spinner stop
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {

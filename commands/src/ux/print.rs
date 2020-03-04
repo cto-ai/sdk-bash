@@ -1,4 +1,4 @@
-use ops_sdk::ux::print;
+use cto_ai::ux::print;
 
 // Runs the print command
 pub fn run(matches: &clap::ArgMatches) {
