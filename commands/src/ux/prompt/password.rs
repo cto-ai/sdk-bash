@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Password;
+use cto_ai::ux::prompt::Password;
 
 // Init the cli commands for the Password prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -39,6 +39,6 @@ pub fn run(matches: &clap::ArgMatches) {
         password = password.confirm();
     }
 
-    let final_value = password.execute();
+    let final_value = password.execute().unwrap();
     println!("{}", final_value);
 }

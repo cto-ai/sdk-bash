@@ -1,6 +1,6 @@
 use chrono;
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Datetime;
+use cto_ai::ux::prompt::Datetime;
 
 // Init the cli commands for the datetime prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -89,7 +89,7 @@ pub fn run(datetime_matches: &clap::ArgMatches) {
         datetime = datetime.variant(variant);
     }
 
-    let final_val = datetime.execute();
+    let final_val = datetime.execute().unwrap();
     println!("{}", final_val);
 }
 

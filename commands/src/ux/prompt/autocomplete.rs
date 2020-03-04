@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Autocomplete;
+use cto_ai::ux::prompt::Autocomplete;
 
 // Init the cli commands for the Autocomplete prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -60,6 +60,6 @@ pub fn run(autocomplete_matches: &clap::ArgMatches) {
         autocomplete = autocomplete.default_value(default_value);
     }
 
-    let final_value = autocomplete.execute();
+    let final_value = autocomplete.execute().unwrap();
     println!("{}", final_value);
 }

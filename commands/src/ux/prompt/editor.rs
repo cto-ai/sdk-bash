@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Editor;
+use cto_ai::ux::prompt::Editor;
 
 // Init the cli commands for the Editor prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -42,6 +42,6 @@ pub fn run(editor_matches: &clap::ArgMatches) {
         editor = editor.default_value(default_value);
     }
 
-    let final_value = editor.execute();
+    let final_value = editor.execute().unwrap();
     println!("{}", final_value);
 }

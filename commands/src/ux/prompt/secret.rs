@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Secret;
+use cto_ai::ux::prompt::Secret;
 
 // Init the cli commands for the Secret prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -28,6 +28,6 @@ pub fn run(matches: &clap::ArgMatches) {
     let name = matches.value_of("name").unwrap();
     let message = matches.value_of("message").unwrap();
 
-    let final_value = Secret::new(name, message).execute();
+    let final_value = Secret::new(name, message).execute().unwrap();
     println!("{}", final_value);
 }

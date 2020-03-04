@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Checkbox;
+use cto_ai::ux::prompt::Checkbox;
 
 // Init the cli commands for the Checkbox prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -46,7 +46,7 @@ pub fn run(checkbox_matches: &clap::ArgMatches) {
         .map(|val| String::from(val))
         .collect();
 
-    let final_value = Checkbox::new(name, message, choices).execute();
+    let final_value = Checkbox::new(name, message, choices).execute().unwrap();
 
     println!("{}", final_value);
 }

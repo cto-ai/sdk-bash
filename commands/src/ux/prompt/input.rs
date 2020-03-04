@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Input;
+use cto_ai::ux::prompt::Input;
 
 // Init the cli commands for the input prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -52,6 +52,6 @@ pub fn run(input_matches: &clap::ArgMatches) {
         input = input.allow_empty();
     }
 
-    let final_value = input.execute();
+    let final_value = input.execute().unwrap();
     println!("{}", final_value);
 }

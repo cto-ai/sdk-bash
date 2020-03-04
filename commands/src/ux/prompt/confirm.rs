@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use ops_sdk::ux::prompt::Confirm;
+use cto_ai::ux::prompt::Confirm;
 
 // Init the cli commands for the Confirm prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
@@ -57,6 +57,6 @@ pub fn run(confirm_matches: &clap::ArgMatches) {
         confirm = confirm.default_value(true);
     }
 
-    let final_value = confirm.execute();
+    let final_value = confirm.execute().unwrap();
     println!("{}", final_value);
 }
