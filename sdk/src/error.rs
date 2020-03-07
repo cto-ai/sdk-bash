@@ -6,4 +6,6 @@ custom_error! {
     DaemonRequestError{source: reqwest::Error} = "Invalid request",
     FileOpenError{source: std::io::Error} = "Error opening file",
     DeserializeError{source: serde_json::Error} = "Error parsing file",
+    JsonKeyError = "Expected key not found",
+    BadTypeError = "Expected type not found",
 }

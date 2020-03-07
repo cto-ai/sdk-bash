@@ -1,5 +1,5 @@
-use crate::ux::prompt::executer;
-use crate::RequestError;
+use super::Prompt;
+use crate::{daemon::stringify, RequestError};
 use serde::Serialize;
 
 /// Public facing Input
@@ -13,7 +13,14 @@ pub struct Input<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     default: Option<&'a str>,
     allow_empty: bool,
-    flag: &'a str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    flag: Option<&'a str>,
+}
+
+impl<'a> Prompt for Input<'a> {
+    fn name(&self) -> &str {
+        self.name
+    }
 }
 
 impl<'a> Input<'a> {
@@ -32,26 +39,28 @@ impl<'a> Input<'a> {
             prompt_type: "input",
             name,
             question,
-            flag: "o",
+            flag: None,
             default: None,
             allow_empty: false,
         }
     }
 
-    // **[Opitional]** Default value to be provided on the terminal and accepted if the user just presses return.
+    /// Sets a default value to be returned if the user just presses enter
     pub fn default_value(mut self, default: &'a str) -> Self {
         self.default = Some(default);
         self
     }
 
-    // **[Opitional]** Allows input to be emmpy.
+    /// Configures the prompt to accept an empty string input (by default it will not accept it)
     pub fn allow_empty(mut self) -> Self {
         self.allow_empty = true;
         self
     }
 
+    // TODO add flag function
+
     /// Executes query based on the values set for Input.
-    pub fn execute(self) -> Result<serde_json::Value, RequestError> {
-        executer::get_value(self)
+    pub fn execute(self) -> Result<String, RequestError> {
+        self.get_value().and_then(stringify)
     }
 }

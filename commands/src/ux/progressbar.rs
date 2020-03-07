@@ -1,131 +1,134 @@
-pub mod start {
+mod start {
+    use crate::descriptions::progress;
+    use crate::validate::{positive_number, positive_or_zero, NumericArg};
     use clap::{App, Arg};
     use cto_ai::ux::progress_bar;
+
+    static LENGTH: &str = "length";
+    static MESSAGE: &str = "message";
+    static INITIAL: &str = "initial";
 
     // Init the cli commands for progressbar start
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
         App::new("start")
-            .about("It starts a Progress Bar")
+            .about(progress::START)
             .arg(
-                Arg::with_name("length")
-                    .long("length")
+                Arg::with_name(LENGTH)
+                    .long(LENGTH)
                     .short("l")
-                    .help("Sets the length of the Progress Bar.")
+                    .help("Sets the full length of the progress bar.")
                     .required(true)
-                    .value_name("LENGTH"),
+                    .value_name("LENGTH")
+                    .validator(positive_number),
             )
             .arg(
-                Arg::with_name("message")
-                    .long("message")
+                Arg::with_name(MESSAGE)
+                    .long(MESSAGE)
                     .short("m")
-                    .help("Message to be displayed when the Progress Bar starts.")
+                    .help("Descriptive message accompanying the progress bar")
                     .value_name("MESSAGE"),
             )
             .arg(
-                Arg::with_name("initial")
-                    .long("initial")
+                Arg::with_name(INITIAL)
+                    .long(INITIAL)
                     .short("i")
-                    .help("Initial lenth of the Progress Bar.")
-                    .value_name("<INITIAL>"),
-            )
-            .arg(
-                Arg::with_name("increment by")
-                    .long("increment-by")
-                    .short("b")
-                    .help("Step to increment the Progress Bar.")
-                    .value_name("<INCREMENT BY>"),
+                    .help("Initial filled length of the progress bar.")
+                    .value_name("INITIAL")
+                    .validator(positive_or_zero),
             )
     }
 
     // Runs the progress start
     pub fn run(matches: &clap::ArgMatches) {
-        let length = parse_number_for(matches, "length");
-        let mut pb = progress_bar::ProgressBar::new(length);
+        let mut pb = progress_bar::ProgressBar::new(matches.value_of_u64(LENGTH).unwrap());
 
-        if matches.is_present("message") {
-            let message = matches.value_of("message").unwrap();
+        if let Some(message) = matches.value_of(MESSAGE) {
             pb = pb.message(message);
         }
 
-        if matches.is_present("initial") {
-            let init = parse_number_for(matches, "initial");
+        if let Some(init) = matches.value_of_u64(INITIAL) {
             pb = pb.initial(init);
         }
 
-        if matches.is_present("increment by") {
-            let incr_by = parse_number_for(matches, "increment by");
-            pb = pb.increment_by(incr_by);
-        }
-
-        pb.start();
-    }
-
-    fn parse_number_for(matches: &clap::ArgMatches, cmd: &str) -> u64 {
-        let value: u64 = matches
-            .value_of(cmd)
-            .unwrap()
-            .parse()
-            .expect("Could not read number.");
-        value
+        pb.start().unwrap();
     }
 }
 
-pub mod advance {
+mod advance {
+    use crate::descriptions::progress;
+    use crate::validate::{positive_number, NumericArg};
     use clap::{App, Arg};
     use cto_ai::ux::progress_bar;
 
-    // Init the cli commands for progressbar start
+    static INCREMENT: &str = "increment";
+
+    // Init the cli commands for progressbar advance
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("advance").about("It advances Progress Bar").arg(
-            Arg::with_name("increment by")
-                .help("Amount the progress will be incremented by.")
+        App::new("advance").about(progress::ADVANCE).arg(
+            Arg::with_name(INCREMENT)
+                .help("Length to increment the progress bar by")
                 .index(1)
-                .takes_value(true),
+                .takes_value(true)
+                .validator(positive_number),
         )
     }
 
     // Runs the progress start
     pub fn run(matches: &clap::ArgMatches) {
-        let inc = if !matches.is_present("increment by") {
-            None
-        } else {
-            let inc: u64 = matches
-                .value_of("increment by")
-                .unwrap()
-                .parse()
-                .expect("Could not read number.");
-            Some(inc)
-        };
-
-        progress_bar::advance(inc);
+        progress_bar::advance(matches.value_of_u64(INCREMENT)).unwrap();
     }
 }
 
-pub mod stop {
+mod stop {
+    use crate::descriptions::progress;
     use clap::{App, Arg};
     use cto_ai::ux::progress_bar;
 
-    // Init the cli commands for progressbar start
+    static MESSAGE: &str = "message";
+
+    // Init the cli commands for progressbar stop
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("stop").about("It stops Progress Bar").arg(
-            Arg::with_name("message")
-                .long("message")
+        App::new("stop").about(progress::STOP).arg(
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
                 .multiple(true)
-                .help("Message to be displayed when the Progress Bar stops.")
+                .help("Message to be displayed with the complete progress bar.")
                 .takes_value(true),
         )
     }
 
     // Runs the stop command for progress bar
     pub fn run(matches: &clap::ArgMatches) {
-        if !matches.is_present("message") {
-            progress_bar::stop(None);
-            return;
-        }
+        progress_bar::stop(
+            matches
+                .values_of(MESSAGE)
+                .map(|values| {
+                    let words: Vec<&str> = values.collect();
+                    words.join(" ")
+                })
+                .as_deref(),
+        )
+        .unwrap();
+    }
+}
 
-        let text: Vec<&str> = matches.values_of("message").unwrap().collect();
-        let message = text.join(" ");
-        progress_bar::stop(Some(&message[..]));
+use crate::descriptions;
+use clap::{App, ArgMatches};
+
+pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
+    App::new("progressbar")
+        .about(descriptions::PROGRESSBAR)
+        .subcommand(start::init_cli_command())
+        .subcommand(advance::init_cli_command())
+        .subcommand(stop::init_cli_command())
+}
+
+pub fn run(matches: &ArgMatches) {
+    match matches.subcommand() {
+        ("start", Some(start_matches)) => start::run(start_matches),
+        ("advance", Some(advance_matches)) => advance::run(advance_matches),
+        ("stop", Some(stop_matches)) => stop::run(stop_matches),
+        _ => panic!("Oops. No progress bar command found"),
     }
 }

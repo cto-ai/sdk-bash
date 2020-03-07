@@ -1,5 +1,5 @@
-use crate::ux::prompt::executer;
-use crate::RequestError;
+use super::Prompt;
+use crate::{daemon::numberize, RequestError};
 use serde::Serialize;
 
 /// Public facing Number
@@ -19,6 +19,12 @@ pub struct Number<'a> {
     max: Option<i32>,
 }
 
+impl<'a> Prompt for Number<'a> {
+    fn name(&self) -> &str {
+        self.name
+    }
+}
+
 impl<'a> Number<'a> {
     /// Returns a new Number
     ///
@@ -35,7 +41,7 @@ impl<'a> Number<'a> {
             prompt_type: "number",
             name,
             question,
-            flag: "c",
+            flag: "c", // TODO make this configurable
             default: None,
             min: None,
             max: None,
@@ -61,7 +67,7 @@ impl<'a> Number<'a> {
     }
 
     /// Executes query based on the values set for Number
-    pub fn execute(self) -> Result<serde_json::Value, RequestError> {
-        executer::get_value(self)
+    pub fn execute(self) -> Result<i64, RequestError> {
+        self.get_value().and_then(numberize)
     }
 }

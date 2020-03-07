@@ -1,102 +1,107 @@
-use chrono;
+use super::{DEFAULT, MESSAGE, NAME};
+use crate::descriptions::prompt;
+use crate::validate::{datetime, DatetimeArg};
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Datetime;
+
+static MAX: &str = "max";
+static MIN: &str = "min";
+static DATE: &str = "date";
+static TIME: &str = "time";
 
 // Init the cli commands for the datetime prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("datetime")
-        .about("It starts a new datetime prompt")
+        .about(prompt::DATETIME)
         .arg(
-            Arg::with_name("name")
+            Arg::with_name(NAME)
+                .long(NAME)
                 .short("n")
-                .long("name")
-                .help("Name of the datetime")
+                .help("Name of the datetime prompt")
                 .value_name("NAME")
                 .required(true),
         )
         .arg(
-            Arg::with_name("message")
-                .long("message")
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
-                .help("Message to be displayed")
+                .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
         )
         .arg(
-            Arg::with_name("default value")
-                .long("default-value")
+            Arg::with_name(DEFAULT)
+                .long(DEFAULT)
                 .short("d")
                 .help(
                     "Sets default value for datetime. \
                      Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z'",
                 )
-                .value_name("DEFAULT VALUE"),
+                .value_name("DEFAULT VALUE")
+                .validator(datetime),
         )
         .arg(
-            Arg::with_name("min")
-                .long("min")
+            Arg::with_name(MIN)
+                .long(MIN)
                 .help(
                     "Sets minimum value for datetime. \
                      Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z'",
                 )
-                .value_name("MIN"),
+                .value_name("MIN")
+                .validator(datetime),
         )
         .arg(
-            Arg::with_name("max")
-                .long("max")
+            Arg::with_name(MAX)
+                .long(MAX)
                 .help(
                     "Sets maximum value for datetime. \
                      Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z'",
                 )
-                .value_name("MAX"),
+                .value_name("MAX")
+                .validator(datetime),
         )
         .arg(
-            Arg::with_name("variant")
-                .long("variant")
-                .help(
-                    "Specifies which time information to prompt for, either \
-                     a date (day/month/year) or a time (hour/minute/second), or both.\
-                     Values: ('date' | 'time' | 'datetime' ). Default is 'datetime'",
-                )
-                .value_name("MAX"),
+            Arg::with_name(DATE)
+                .long(DATE)
+                .short("D")
+                .help("Only get a date, with no associated time"),
+        )
+        .arg(
+            Arg::with_name(TIME)
+                .long(TIME)
+                .short("t")
+                .conflicts_with(DATE)
+                .help("Only get a time, with no associated date"),
         )
 }
 
 // Runs the datetime prompt
-pub fn run(datetime_matches: &clap::ArgMatches) {
-    let name = datetime_matches.value_of("name").unwrap();
-    let message = datetime_matches.value_of("message").unwrap();
+pub fn run(matches: &clap::ArgMatches) {
+    let mut datetime = Datetime::new(
+        matches.value_of(NAME).unwrap(),
+        matches.value_of(MESSAGE).unwrap(),
+    );
 
-    let mut datetime = Datetime::new(name, message);
-
-    if datetime_matches.is_present("default value") {
-        let dt = parse_datetime_for(datetime_matches, "default value");
-        datetime = datetime.default_value(dt);
+    if let Some(default) = matches.value_of_datetime(DEFAULT) {
+        datetime = datetime.default_value(default);
     }
 
-    if datetime_matches.is_present("min") {
-        let dt = parse_datetime_for(datetime_matches, "min");
-        datetime = datetime.min(dt);
+    if let Some(min) = matches.value_of_datetime(MIN) {
+        datetime = datetime.min(min);
     }
 
-    if datetime_matches.is_present("max") {
-        let dt = parse_datetime_for(datetime_matches, "max");
-        datetime = datetime.max(dt);
+    if let Some(max) = matches.value_of_datetime(MAX) {
+        datetime = datetime.max(max);
     }
 
-    if datetime_matches.is_present("variant") {
-        let variant = datetime_matches.value_of("variant").unwrap();
-        datetime = datetime.variant(variant);
+    if matches.is_present(DATE) {
+        datetime = datetime.variant(DATE);
+    }
+
+    if matches.is_present(TIME) {
+        datetime = datetime.variant(TIME);
     }
 
     let final_val = datetime.execute().unwrap();
     println!("{}", final_val);
-}
-
-fn parse_datetime_for(matches: &clap::ArgMatches, cmd: &str) -> chrono::DateTime<chrono::Utc> {
-    let value = matches.value_of(cmd).unwrap();
-    let dt = chrono::DateTime::parse_from_rfc3339(value)
-        .unwrap()
-        .naive_utc();
-    chrono::DateTime::from_utc(dt, chrono::Utc)
 }

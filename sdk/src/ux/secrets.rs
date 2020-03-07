@@ -1,4 +1,4 @@
-use crate::daemon::async_request;
+use crate::daemon::{async_request, stringify};
 use crate::RequestError;
 use serde::Serialize;
 
@@ -24,9 +24,11 @@ impl<'a> Secrets<'a> {
     /// let secret_val = secrets::Secrets::new().get("SECRET_NAME");
     /// println!("{}", secret_val);
     /// ```
-    pub fn get(mut self, name: &'a str) -> Result<serde_json::Value, RequestError> {
+    pub fn get(mut self, name: &'a str) -> Result<String, RequestError> {
         self.name = Some(name);
         async_request("secret/get", self)
+            .and_then(|value| value.get(name).cloned().ok_or(RequestError::JsonKeyError))
+            .and_then(stringify)
     }
 
     /// Sets a secret to the user's vault.
@@ -49,5 +51,6 @@ impl<'a> Secrets<'a> {
         self.name = Some(name);
         self.secret = Some(secret);
         async_request("secret/set", self)
+            .and_then(|value| value.get("key").cloned().ok_or(RequestError::JsonKeyError))
     }
 }

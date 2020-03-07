@@ -1,5 +1,5 @@
-use crate::ux::prompt::executer;
-use crate::RequestError;
+use super::Prompt;
+use crate::{daemon::stringify, RequestError};
 use serde::Serialize;
 
 /// Public facing Secret
@@ -10,6 +10,12 @@ pub struct Secret<'a> {
     name: &'a str,
     #[serde(rename = "message")]
     question: &'a str,
+}
+
+impl<'a> Prompt for Secret<'a> {
+    fn name(&self) -> &str {
+        self.name
+    }
 }
 
 impl<'a> Secret<'a> {
@@ -32,7 +38,7 @@ impl<'a> Secret<'a> {
     }
 
     /// Executes query based on the values set for Secret.
-    pub fn execute(self) -> Result<serde_json::Value, RequestError> {
-        executer::get_value(self)
+    pub fn execute(self) -> Result<String, RequestError> {
+        self.get_value().and_then(stringify)
     }
 }
