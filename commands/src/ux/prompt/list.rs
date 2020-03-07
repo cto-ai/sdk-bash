@@ -1,63 +1,71 @@
+use super::{DEFAULT, MESSAGE, NAME};
+use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::List;
+
+static CHOICES: &str = "choices";
+static AUTOCOMPLETE: &str = "autocomplete";
 
 // Init the cli commands for the List prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("list")
-        .about("It starts a new list prompt")
+        .about(prompt::LIST)
         .arg(
-            Arg::with_name("name")
+            Arg::with_name(NAME)
+                .long(NAME)
                 .short("n")
-                .long("name")
-                .help("Name of the list")
+                .help("Name of the list prompt")
                 .value_name("NAME")
                 .required(true),
         )
         .arg(
-            Arg::with_name("message")
-                .long("message")
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
-                .help("Message to be displayed")
+                .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
         )
         .arg(
-            Arg::with_name("choices")
-                .long("choices")
-                .short("c")
-                .help(
-                    "List of choices to be loaded in the list. \
-                    Example: -c val1 -c val2 OR -c val1 val2 OR -c 'Val 1' 'Val 2'
-                ",
-                )
+            Arg::with_name(CHOICES)
+                .help("The choices to include in the list")
                 .required(true)
                 .value_name("CHOICES")
                 .multiple(true),
         )
         .arg(
-            Arg::with_name("default value")
-                .long("default-value")
+            Arg::with_name(DEFAULT)
+                .long(DEFAULT)
                 .short("d")
-                .help("Sets default value for list")
+                .help("Sets default selected value in the list")
                 .value_name("DEFAULT VALUE"),
+        )
+        .arg(
+            Arg::with_name(AUTOCOMPLETE)
+                .long(AUTOCOMPLETE)
+                .short("a")
+                .help("Enables autocomplete on the list"),
         )
 }
 
 // Runs the List prompt
-pub fn run(list_matches: &clap::ArgMatches) {
-    let name = list_matches.value_of("name").unwrap();
-    let message = list_matches.value_of("message").unwrap();
-    let choices: Vec<String> = list_matches
-        .values_of("choices")
+pub fn run(matches: &clap::ArgMatches) {
+    let name = matches.value_of(NAME).unwrap();
+    let message = matches.value_of(MESSAGE).unwrap();
+    let choices = matches
+        .values_of(CHOICES)
         .unwrap()
-        .map(|val| String::from(val))
+        .map(String::from)
         .collect();
 
     let mut list = List::new(name, message, choices);
 
-    if list_matches.is_present("default value") {
-        let default_value = list_matches.value_of("default value").unwrap();
-        list = list.default_value(default_value);
+    if let Some(default) = matches.value_of(DEFAULT) {
+        list = list.default_value(default);
+    }
+
+    if matches.is_present(AUTOCOMPLETE) {
+        list = list.autocomplete();
     }
 
     let final_value = list.execute().unwrap();

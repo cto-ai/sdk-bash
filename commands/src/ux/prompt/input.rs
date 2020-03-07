@@ -1,54 +1,57 @@
+use super::{DEFAULT, MESSAGE, NAME};
+use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Input;
+
+static ALLOW_EMPTY: &str = "allow empty";
 
 // Init the cli commands for the input prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("input")
-        .about("It starts a new input prompt")
+        .about(prompt::INPUT)
         .arg(
-            Arg::with_name("name")
+            Arg::with_name(NAME)
+                .long(NAME)
                 .short("n")
-                .long("name")
-                .help("Name of the input")
+                .help("Name of the input prompt")
                 .value_name("NAME")
                 .required(true),
         )
         .arg(
-            Arg::with_name("message")
-                .long("message")
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
-                .help("Message to be displayed")
+                .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
         )
         .arg(
-            Arg::with_name("default value")
-                .long("default-value")
+            Arg::with_name(DEFAULT)
+                .long(DEFAULT)
                 .short("d")
-                .help("Sets default value for input")
-                .value_name("DEFAULT VALUE"),
+                .help("Sets a default response")
+                .value_name("DEFAULT"),
         )
         .arg(
-            Arg::with_name("allow empty")
-                .long("allow-empty")
+            Arg::with_name(ALLOW_EMPTY)
+                .long(ALLOW_EMPTY)
                 .short("a")
-                .help("Allows empty value on input"),
+                .help("Allows the user to submit an empty value"),
         )
 }
 
 // Runs the input prompt
-pub fn run(input_matches: &clap::ArgMatches) {
-    let name = input_matches.value_of("name").unwrap();
-    let message = input_matches.value_of("message").unwrap();
+pub fn run(matches: &clap::ArgMatches) {
+    let mut input = Input::new(
+        matches.value_of(NAME).unwrap(),
+        matches.value_of(MESSAGE).unwrap(),
+    );
 
-    let mut input = Input::new(name, message);
-
-    if input_matches.is_present("default value") {
-        let default_value = input_matches.value_of("default value").unwrap();
-        input = input.default_value(default_value);
+    if let Some(default) = matches.value_of(DEFAULT) {
+        input = input.default_value(&default);
     }
 
-    if input_matches.is_present("allow empty") {
+    if matches.is_present(ALLOW_EMPTY) {
         input = input.allow_empty();
     }
 

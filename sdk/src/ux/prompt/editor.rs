@@ -1,5 +1,5 @@
-use crate::ux::prompt::executer;
-use crate::RequestError;
+use super::Prompt;
+use crate::{daemon::stringify, RequestError};
 use serde::Serialize;
 
 /// Public facing Editor
@@ -12,6 +12,12 @@ pub struct Editor<'a> {
     question: &'a str,
     #[serde(skip_serializing_if = "Option::is_none")]
     default: Option<&'a str>,
+}
+
+impl<'a> Prompt for Editor<'a> {
+    fn name(&self) -> &str {
+        self.name
+    }
 }
 
 impl<'a> Editor<'a> {
@@ -41,7 +47,7 @@ impl<'a> Editor<'a> {
     }
 
     /// Executes query based on the values set for Editor
-    pub fn execute(self) -> Result<serde_json::Value, RequestError> {
-        executer::get_value(self)
+    pub fn execute(self) -> Result<String, RequestError> {
+        self.get_value().and_then(stringify)
     }
 }

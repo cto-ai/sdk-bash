@@ -1,52 +1,67 @@
+use super::{DEFAULT, MESSAGE, NAME};
+use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Checkbox;
+
+static CHOICES: &str = "choices";
 
 // Init the cli commands for the Checkbox prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("checkbox")
-        .about("It starts a new checkbox prompt")
+        .about(prompt::CHECKBOX)
         .arg(
-            Arg::with_name("name")
+            Arg::with_name(NAME)
+                .long(NAME)
                 .short("n")
-                .long("name")
-                .help("Name of the checkbox")
+                .help("Name of the checkbox prompt")
                 .value_name("NAME")
                 .required(true),
         )
         .arg(
-            Arg::with_name("message")
-                .long("message")
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
-                .help("Message to be displayed")
+                .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
         )
         .arg(
-            Arg::with_name("choices")
-                .long("choices")
-                .short("c")
-                .help(
-                    "List of choices to be loaded in the list. \
-                    Example: -c val1 -c val2 OR -c val1 val2 OR -c 'Val 1' 'Val 2'
-                ",
-                )
+            Arg::with_name(CHOICES)
+                .help("List of choices to present to the user")
                 .required(true)
                 .value_name("CHOICES")
                 .multiple(true),
         )
+        .arg(
+            Arg::with_name(DEFAULT)
+                .long(DEFAULT)
+                .short("d")
+                .multiple(true)
+                .help("Value or values to be selected in the list by default")
+                .value_name("DEFAULT VALUE"),
+        )
 }
 
 // Runs the Checkbox prompt
-pub fn run(checkbox_matches: &clap::ArgMatches) {
-    let name = checkbox_matches.value_of("name").unwrap();
-    let message = checkbox_matches.value_of("message").unwrap();
-    let choices: Vec<String> = checkbox_matches
-        .values_of("choices")
+pub fn run(matches: &clap::ArgMatches) {
+    let name = matches.value_of(NAME).unwrap();
+    let message = matches.value_of(MESSAGE).unwrap();
+    let choices = matches
+        .values_of(CHOICES)
         .unwrap()
-        .map(|val| String::from(val))
+        .map(String::from)
         .collect();
 
-    let final_value = Checkbox::new(name, message, choices).execute().unwrap();
+    let mut checkbox = Checkbox::new(name, message, choices);
 
-    println!("{}", final_value);
+    if let Some(defaults) = matches.values_of(DEFAULT) {
+        let default_vec = defaults.map(String::from).collect();
+        checkbox = checkbox.default(default_vec);
+    }
+
+    let final_value = checkbox.execute().unwrap();
+
+    for result in final_value.iter() {
+        println!("{}", result);
+    }
 }

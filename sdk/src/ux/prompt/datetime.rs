@@ -1,5 +1,5 @@
-use crate::ux::prompt::executer;
-use crate::RequestError;
+use super::Prompt;
+use crate::{daemon::stringify, RequestError};
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 
@@ -19,6 +19,12 @@ pub struct Datetime<'a> {
     min: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     max: Option<DateTime<Utc>>,
+}
+
+impl<'a> Prompt for Datetime<'a> {
+    fn name(&self) -> &str {
+        self.name
+    }
 }
 
 impl<'a> Datetime<'a> {
@@ -85,7 +91,7 @@ impl<'a> Datetime<'a> {
     }
 
     /// Executes query based on the values set for Datetime
-    pub fn execute(self) -> Result<serde_json::Value, RequestError> {
-        executer::get_value(self)
+    pub fn execute(self) -> Result<String, RequestError> {
+        self.get_value().and_then(stringify)
     }
 }

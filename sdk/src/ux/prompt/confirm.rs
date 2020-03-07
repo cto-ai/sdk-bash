@@ -1,5 +1,5 @@
-use crate::ux::prompt::executer;
-use crate::RequestError;
+use super::Prompt;
+use crate::{daemon::booleanize, RequestError};
 use serde::Serialize;
 
 /// Public facing Confirm
@@ -13,6 +13,12 @@ pub struct Confirm<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     default: Option<bool>,
     flag: &'a str,
+}
+
+impl<'a> Prompt for Confirm<'a> {
+    fn name(&self) -> &str {
+        self.name
+    }
 }
 
 impl<'a> Confirm<'a> {
@@ -43,7 +49,7 @@ impl<'a> Confirm<'a> {
     }
 
     /// Executes query based on the values set for Confirm.
-    pub fn execute(self) -> Result<serde_json::Value, RequestError> {
-        executer::get_value(self)
+    pub fn execute(self) -> Result<bool, RequestError> {
+        self.get_value().and_then(booleanize)
     }
 }

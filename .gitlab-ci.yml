@@ -1,0 +1,58 @@
+image: alpine:3.10
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay
+  SSH_GITLAB_KEY: $SSH_PRIVATE_KEY
+  IMAGE_NAME: $CI_PUBLIC_REGISTRY/official_images/bash
+  BUSTER_IMAGE_TAG: buster-slim
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - /var/cache/apk
+
+stages:
+  - build
+
+before_script:
+  - apk add -U openssh-client git make alpine-sdk
+  - REPOSITORY_PATH=${CI_PROJECT_URL#*//}
+  - mkdir -p /root/.ssh
+  - chmod 700 /root/.ssh
+  - echo "${SSH_GITLAB_KEY}" > /root/.ssh/id_rsa
+  - chmod 600 /root/.ssh/id_rsa
+  - ssh-keyscan git.cto.ai > /root/.ssh/known_hosts
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null" > ~/.ssh/config
+  - git config --global url."ssh://git@git.cto.ai:2224".insteadOf "https://git.cto.ai"
+
+after_script:
+  - rm -rf /root/.ssh
+
+# Build stage for branches other than master (based on tag)
+build-branch:
+  stage: build
+  image: docker:stable
+  only:
+    - tags
+  except:
+    - master
+  script:
+    - docker login -u $PUBLIC_CI_USER -p $PUBLIC_CI_TOKEN $CI_PUBLIC_REGISTRY
+    - docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:$BUSTER_IMAGE_TAG .
+    - docker push $IMAGE_NAME:$BUSTER_IMAGE_TAG
+
+# Build stage for the master branch (automatic)
+build-master:
+  stage: build
+  only:
+    - master
+  image: docker:stable
+  script:
+    - docker login -u $PUBLIC_CI_USER -p $PUBLIC_CI_TOKEN $CI_PUBLIC_REGISTRY
+    - docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:$BUSTER_IMAGE_TAG .
+    - docker tag $IMAGE_NAME:$BUSTER_IMAGE_TAG $IMAGE_NAME:latest
+    - docker push $IMAGE_NAME:$BUSTER_IMAGE_TAG
+    - docker push $IMAGE_NAME:latest

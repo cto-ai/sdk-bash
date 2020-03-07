@@ -1,5 +1,5 @@
-use crate::ux::prompt::executer;
-use crate::RequestError;
+use super::Prompt;
+use crate::{daemon::stringify, RequestError};
 use serde::Serialize;
 
 /// Public facing Password
@@ -11,6 +11,12 @@ pub struct Password<'a> {
     #[serde(rename = "message")]
     question: &'a str,
     confirm: bool,
+}
+
+impl<'a> Prompt for Password<'a> {
+    fn name(&self) -> &str {
+        self.name
+    }
 }
 
 impl<'a> Password<'a> {
@@ -40,7 +46,7 @@ impl<'a> Password<'a> {
     }
 
     /// Executes query based on the values set for Password.
-    pub fn execute(self) -> Result<serde_json::Value, RequestError> {
-        executer::get_value(self)
+    pub fn execute(self) -> Result<String, RequestError> {
+        self.get_value().and_then(stringify)
     }
 }

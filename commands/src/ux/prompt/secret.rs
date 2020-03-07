@@ -1,23 +1,26 @@
+use super::{MESSAGE, NAME};
+use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Secret;
 
 // Init the cli commands for the Secret prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("secret")
-        .about("It starts a new secret prompt")
+        .about(prompt::SECRET)
         .arg(
-            Arg::with_name("name")
+            Arg::with_name(NAME)
+                .long(NAME)
                 .short("n")
-                .long("name")
-                .help("Name of the secret.")
+                .visible_alias("key")
+                .help("Name of the secret prompt. Used as a key to match the secret store")
                 .value_name("NAME")
                 .required(true),
         )
         .arg(
-            Arg::with_name("message")
-                .long("message")
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
-                .help("Message to be displayed.")
+                .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
         )
@@ -25,9 +28,11 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 // Runs the Secret prompt
 pub fn run(matches: &clap::ArgMatches) {
-    let name = matches.value_of("name").unwrap();
-    let message = matches.value_of("message").unwrap();
-
-    let final_value = Secret::new(name, message).execute().unwrap();
+    let final_value = Secret::new(
+        matches.value_of(NAME).unwrap(),
+        matches.value_of(MESSAGE).unwrap(),
+    )
+    .execute()
+    .unwrap();
     println!("{}", final_value);
 }

@@ -17,8 +17,7 @@ struct Print<'a> {
 /// print("Some printed value");
 /// ```
 pub fn print(text: &str) -> Result<(), RequestError> {
-    let p = Print { text };
-    simple_request("print", p)?;
+    simple_request("print", Print { text })?;
     Ok(())
 }
 

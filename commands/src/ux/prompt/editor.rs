@@ -1,45 +1,46 @@
+use super::{DEFAULT, MESSAGE, NAME};
+use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Editor;
 
 // Init the cli commands for the Editor prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
     App::new("editor")
-        .about("It starts a new editor prompt")
+        .about(prompt::EDITOR)
         .arg(
-            Arg::with_name("name")
+            Arg::with_name(NAME)
+                .long(NAME)
                 .short("n")
-                .long("name")
-                .help("Name of the editor")
+                .help("Name of the editor prompt")
                 .value_name("NAME")
                 .required(true),
         )
         .arg(
-            Arg::with_name("message")
-                .long("message")
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
-                .help("Message to be displayed")
+                .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
         )
         .arg(
-            Arg::with_name("default value")
-                .long("default-value")
+            Arg::with_name(DEFAULT)
+                .long(DEFAULT)
                 .short("d")
-                .help("Sets default value for editor")
-                .value_name("DEFAULT VALUE"),
+                .help("Sets initial value for in the editor")
+                .value_name("DEFAULT"),
         )
 }
 
 // Runs the Editor prompt
-pub fn run(editor_matches: &clap::ArgMatches) {
-    let name = editor_matches.value_of("name").unwrap();
-    let message = editor_matches.value_of("message").unwrap();
+pub fn run(matches: &clap::ArgMatches) {
+    let mut editor = Editor::new(
+        matches.value_of(NAME).unwrap(),
+        matches.value_of(MESSAGE).unwrap(),
+    );
 
-    let mut editor = Editor::new(name, message);
-
-    if editor_matches.is_present("default value") {
-        let default_value = editor_matches.value_of("default value").unwrap();
-        editor = editor.default_value(default_value);
+    if let Some(default) = matches.value_of(DEFAULT) {
+        editor = editor.default_value(default);
     }
 
     let final_value = editor.execute().unwrap();
