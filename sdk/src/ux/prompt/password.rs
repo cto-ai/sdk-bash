@@ -10,6 +10,8 @@ pub struct Password<'a> {
     name: &'a str,
     #[serde(rename = "message")]
     question: &'a str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    flag: Option<&'a str>,
     confirm: bool,
 }
 
@@ -35,13 +37,19 @@ impl<'a> Password<'a> {
             prompt_type: "password",
             name,
             question,
+            flag: None,
             confirm: false,
         }
     }
 
-    /// **[Opitional]** Asks the user for password confimation
+    /// **[Optional]** Asks the user for password confimation
     pub fn confirm(mut self) -> Self {
         self.confirm = true;
+        self
+    }
+
+    pub fn flag(mut self, flag: &'a str) -> Self {
+        self.flag = Some(flag);
         self
     }
 
