@@ -1,4 +1,4 @@
-use super::{DEFAULT, MESSAGE, NAME};
+use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Checkbox;
@@ -24,6 +24,13 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
                 .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
+        )
+        .arg(
+            Arg::with_name(FLAG)
+                .long(FLAG)
+                .short("f")
+                .help("Command line flag alias associated with this prompt")
+                .value_name("FLAG"),
         )
         .arg(
             Arg::with_name(CHOICES)
@@ -57,6 +64,10 @@ pub fn run(matches: &clap::ArgMatches) {
     if let Some(defaults) = matches.values_of(DEFAULT) {
         let default_vec = defaults.map(String::from).collect();
         checkbox = checkbox.default(default_vec);
+    }
+
+    if let Some(flag) = matches.value_of(FLAG) {
+        checkbox = checkbox.flag(flag);
     }
 
     let final_value = checkbox.execute().unwrap();

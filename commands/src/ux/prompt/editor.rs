@@ -1,4 +1,4 @@
-use super::{DEFAULT, MESSAGE, NAME};
+use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Editor;
@@ -30,6 +30,13 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
                 .help("Sets initial value for in the editor")
                 .value_name("DEFAULT"),
         )
+        .arg(
+            Arg::with_name(FLAG)
+                .long(FLAG)
+                .short("f")
+                .help("Command line flag alias associated with this prompt")
+                .value_name("FLAG"),
+        )
 }
 
 // Runs the Editor prompt
@@ -41,6 +48,10 @@ pub fn run(matches: &clap::ArgMatches) {
 
     if let Some(default) = matches.value_of(DEFAULT) {
         editor = editor.default_value(default);
+    }
+
+    if let Some(flag) = matches.value_of(FLAG) {
+        editor = editor.flag(flag);
     }
 
     let final_value = editor.execute().unwrap();

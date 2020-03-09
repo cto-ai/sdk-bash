@@ -1,4 +1,4 @@
-use super::{MESSAGE, NAME};
+use super::{FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Password;
@@ -27,6 +27,13 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
                 .value_name("MESSAGE"),
         )
         .arg(
+            Arg::with_name(FLAG)
+                .long(FLAG)
+                .short("f")
+                .help("Command line flag alias associated with this prompt")
+                .value_name("FLAG"),
+        )
+        .arg(
             Arg::with_name(CONFIRM)
                 .long(CONFIRM)
                 .help("Asks for password confirmation."),
@@ -42,6 +49,10 @@ pub fn run(matches: &clap::ArgMatches) {
 
     if matches.is_present(CONFIRM) {
         password = password.confirm();
+    }
+
+    if let Some(flag) = matches.value_of(FLAG) {
+        password = password.flag(flag);
     }
 
     let final_value = password.execute().unwrap();

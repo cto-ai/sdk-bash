@@ -1,4 +1,4 @@
-use super::{DEFAULT, MESSAGE, NAME};
+use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::List;
@@ -25,6 +25,13 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
                 .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
+        )
+        .arg(
+            Arg::with_name(FLAG)
+                .long(FLAG)
+                .short("f")
+                .help("Command line flag alias associated with this prompt")
+                .value_name("FLAG"),
         )
         .arg(
             Arg::with_name(CHOICES)
@@ -66,6 +73,10 @@ pub fn run(matches: &clap::ArgMatches) {
 
     if matches.is_present(AUTOCOMPLETE) {
         list = list.autocomplete();
+    }
+
+    if let Some(flag) = matches.value_of(FLAG) {
+        list = list.flag(flag);
     }
 
     let final_value = list.execute().unwrap();
