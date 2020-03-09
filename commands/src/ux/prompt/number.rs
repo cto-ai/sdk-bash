@@ -1,4 +1,4 @@
-use super::{DEFAULT, MESSAGE, NAME};
+use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use crate::validate::{numeric, NumericArg};
 use clap::{App, Arg};
@@ -26,6 +26,13 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
                 .help("Message to be displayed to the user")
                 .required(true)
                 .value_name("MESSAGE"),
+        )
+        .arg(
+            Arg::with_name(FLAG)
+                .long(FLAG)
+                .short("f")
+                .help("Command line flag alias associated with this prompt")
+                .value_name("FLAG"),
         )
         .arg(
             Arg::with_name(DEFAULT)
@@ -68,6 +75,10 @@ pub fn run(matches: &clap::ArgMatches) {
 
     if let Some(max) = matches.value_of_i32(MAX) {
         number = number.max(max);
+    }
+
+    if let Some(flag) = matches.value_of(FLAG) {
+        number = number.flag(flag);
     }
 
     let final_value = number.execute().unwrap();

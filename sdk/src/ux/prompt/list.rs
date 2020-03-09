@@ -14,6 +14,8 @@ pub struct List<'a> {
     #[serde(rename = "message")]
     question: &'a str,
     #[serde(skip_serializing_if = "Option::is_none")]
+    flag: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     default: Option<&'a str>,
     choices: Vec<String>,
 }
@@ -40,12 +42,13 @@ impl<'a> List<'a> {
             prompt_type: LIST_TYPE,
             name,
             question,
+            flag: None,
             default: None,
             choices,
         }
     }
 
-    /// **[Opitional]** Default value to be provided on the terminal and accepted if the user just presses return.
+    /// **[Optional]** Default value to be provided on the terminal and accepted if the user just presses return.
     pub fn default_value(mut self, default: &'a str) -> Self {
         self.default = Some(default);
         self
@@ -53,6 +56,11 @@ impl<'a> List<'a> {
 
     pub fn autocomplete(mut self) -> Self {
         self.prompt_type = AUTOCOMPLETE_TYPE;
+        self
+    }
+
+    pub fn flag(mut self, flag: &'a str) -> Self {
+        self.flag = Some(flag);
         self
     }
 

@@ -1,4 +1,4 @@
-use super::{MESSAGE, NAME};
+use super::{FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Confirm;
@@ -27,16 +27,23 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
                 .value_name("MESSAGE"),
         )
         .arg(
+            Arg::with_name(FLAG)
+                .long(FLAG)
+                .short("f")
+                .help("Command line flag alias associated with this prompt")
+                .value_name("FLAG"),
+        )
+        .arg(
             Arg::with_name(DEFAULT_TRUE)
                 .long(DEFAULT_TRUE)
-                .short("t")
+                .short("T")
                 .help("Sets the default response to true"),
         )
         .arg(
             Arg::with_name(DEFAULT_FALSE)
                 .long(DEFAULT_FALSE)
                 .conflicts_with(DEFAULT_TRUE)
-                .short("f")
+                .short("F")
                 .help("Sets the default response to false"),
         )
 }
@@ -54,6 +61,10 @@ pub fn run(matches: &clap::ArgMatches) {
 
     if matches.is_present(DEFAULT_TRUE) {
         confirm = confirm.default_value(true);
+    }
+
+    if let Some(flag) = matches.value_of(FLAG) {
+        confirm = confirm.flag(flag);
     }
 
     let final_value = confirm.execute().unwrap();

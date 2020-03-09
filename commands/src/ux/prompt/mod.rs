@@ -12,6 +12,7 @@ mod secret;
 pub(crate) static NAME: &str = "name";
 pub(crate) static MESSAGE: &str = "message";
 pub(crate) static DEFAULT: &str = "default";
+pub(crate) static FLAG: &str = "flag";
 
 use crate::descriptions;
 use clap::{App, ArgMatches};

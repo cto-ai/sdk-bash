@@ -1,4 +1,4 @@
-use super::{DEFAULT, MESSAGE, NAME};
+use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::Input;
@@ -33,6 +33,13 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
                 .value_name("DEFAULT"),
         )
         .arg(
+            Arg::with_name(FLAG)
+                .long(FLAG)
+                .short("f")
+                .help("Command line flag alias associated with this prompt")
+                .value_name("FLAG"),
+        )
+        .arg(
             Arg::with_name(ALLOW_EMPTY)
                 .long(ALLOW_EMPTY)
                 .short("a")
@@ -53,6 +60,10 @@ pub fn run(matches: &clap::ArgMatches) {
 
     if matches.is_present(ALLOW_EMPTY) {
         input = input.allow_empty();
+    }
+
+    if let Some(flag) = matches.value_of(FLAG) {
+        input = input.flag(flag);
     }
 
     let final_value = input.execute().unwrap();

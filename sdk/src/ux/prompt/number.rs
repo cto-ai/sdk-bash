@@ -12,7 +12,8 @@ pub struct Number<'a> {
     question: &'a str,
     #[serde(skip_serializing_if = "Option::is_none")]
     default: Option<i32>,
-    flag: &'a str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    flag: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     min: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -41,28 +42,33 @@ impl<'a> Number<'a> {
             prompt_type: "number",
             name,
             question,
-            flag: "c", // TODO make this configurable
+            flag: None,
             default: None,
             min: None,
             max: None,
         }
     }
 
-    ///  **[Opitional]** Default value to be provided on the terminal and accepted if the user just presses return.
+    ///  **[Optional]** Default value to be provided on the terminal and accepted if the user just presses return.
     pub fn default_value(mut self, default: i32) -> Self {
         self.default = Some(default);
         self
     }
 
-    /// **[Opitional]** The minimum time to permit in the prompt.
+    /// **[Optional]** The minimum time to permit in the prompt.
     pub fn min(mut self, value: i32) -> Self {
         self.min = Some(value);
         self
     }
 
-    ///  **[Opitional]** The maximum time to permit in the prompt.
+    ///  **[Optional]** The maximum time to permit in the prompt.
     pub fn max(mut self, value: i32) -> Self {
         self.max = Some(value);
+        self
+    }
+
+    pub fn flag(mut self, flag: &'a str) -> Self {
+        self.flag = Some(flag);
         self
     }
 

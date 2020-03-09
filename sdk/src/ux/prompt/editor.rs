@@ -11,6 +11,8 @@ pub struct Editor<'a> {
     #[serde(rename = "message")]
     question: &'a str,
     #[serde(skip_serializing_if = "Option::is_none")]
+    flag: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     default: Option<&'a str>,
 }
 
@@ -37,12 +39,18 @@ impl<'a> Editor<'a> {
             prompt_type: "editor",
             name,
             question,
+            flag: None,
             default: None,
         }
     }
-    /// **[Opitional]** Default value to be provided to the editor when opened.
+    /// **[Optional]** Default value to be provided to the editor when opened.
     pub fn default_value(mut self, default: &'a str) -> Self {
         self.default = Some(default);
+        self
+    }
+
+    pub fn flag(mut self, flag: &'a str) -> Self {
+        self.flag = Some(flag);
         self
     }
 

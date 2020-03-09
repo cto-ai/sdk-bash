@@ -57,7 +57,10 @@ impl<'a> Input<'a> {
         self
     }
 
-    // TODO add flag function
+    pub fn flag(mut self, flag: &'a str) -> Self {
+        self.flag = Some(flag);
+        self
+    }
 
     /// Executes query based on the values set for Input.
     pub fn execute(self) -> Result<String, RequestError> {

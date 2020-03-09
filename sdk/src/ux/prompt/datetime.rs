@@ -12,6 +12,8 @@ pub struct Datetime<'a> {
     #[serde(rename = "message")]
     question: &'a str,
     #[serde(skip_serializing_if = "Option::is_none")]
+    flag: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     default: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     variant: Option<&'a str>,
@@ -49,6 +51,7 @@ impl<'a> Datetime<'a> {
             prompt_type: "datetime",
             name,
             question,
+            flag: None,
             variant: None,
             default: None,
             min: None,
@@ -65,7 +68,7 @@ impl<'a> Datetime<'a> {
         self
     }
 
-    /// Opitional variant
+    /// Optional variant
     ///
     /// `("date" | "time" | "datetime" )` specifies which time information to prompt for, either
     ///a date (day/month/year) or a time (hour/minute/second), or both. Default is "datetime".
@@ -74,7 +77,7 @@ impl<'a> Datetime<'a> {
         self
     }
 
-    /// Opitional min
+    /// Optional min
     ///
     /// The minimum time to permit in the prompt.
     pub fn min(mut self, value: DateTime<Utc>) -> Self {
@@ -82,11 +85,16 @@ impl<'a> Datetime<'a> {
         self
     }
 
-    /// Opitional max
+    /// Optional max
     ///
     /// The maximum time to permit in the prompt.
     pub fn max(mut self, value: DateTime<Utc>) -> Self {
         self.max = Some(value);
+        self
+    }
+
+    pub fn flag(mut self, flag: &'a str) -> Self {
+        self.flag = Some(flag);
         self
     }
 

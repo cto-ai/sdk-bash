@@ -10,6 +10,8 @@ pub struct Checkbox<'a> {
     name: &'a str,
     #[serde(rename = "message")]
     question: &'a str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    flag: Option<&'a str>,
     choices: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     default: Option<Vec<String>>,
@@ -45,11 +47,17 @@ impl<'a> Checkbox<'a> {
             question,
             choices,
             default: None,
+            flag: None,
         }
     }
 
     pub fn default(mut self, default: Vec<String>) -> Self {
         self.default = Some(default);
+        self
+    }
+
+    pub fn flag(mut self, flag: &'a str) -> Self {
+        self.flag = Some(flag);
         self
     }
 

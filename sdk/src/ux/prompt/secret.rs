@@ -10,6 +10,8 @@ pub struct Secret<'a> {
     name: &'a str,
     #[serde(rename = "message")]
     question: &'a str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    flag: Option<&'a str>,
 }
 
 impl<'a> Prompt for Secret<'a> {
@@ -34,7 +36,13 @@ impl<'a> Secret<'a> {
             prompt_type: "secret",
             name,
             question,
+            flag: None,
         }
+    }
+
+    pub fn flag(mut self, flag: &'a str) -> Self {
+        self.flag = Some(flag);
+        self
     }
 
     /// Executes query based on the values set for Secret.
