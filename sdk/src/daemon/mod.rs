@@ -23,9 +23,21 @@ fn read_fifo(filename: String) -> Result<serde_json::Value, RequestError> {
     Ok(serde_json::from_reader(reader)?)
 }
 
-pub fn simple_request<T: Serialize>(endpoint: &str, body: T) -> Result<(), RequestError> {
+pub fn simple_request(endpoint: &str, body: impl Serialize) -> Result<(), RequestError> {
     make_request(endpoint, body)?;
     Ok(())
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct ValueResponse {
+    value: serde_json::Value,
+}
+
+pub fn sync_request(
+    endpoint: &str,
+    body: impl Serialize,
+) -> Result<serde_json::Value, RequestError> {
+    Ok(make_request(endpoint, body)?.json::<ValueResponse>()?.value)
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -34,9 +46,9 @@ struct DaemonResponse {
     reply_filename: String,
 }
 
-pub fn async_request<T: Serialize>(
+pub fn async_request(
     endpoint: &str,
-    body: T,
+    body: impl Serialize,
 ) -> Result<serde_json::Value, RequestError> {
     let filename = make_request(endpoint, body)?
         .json::<DaemonResponse>()?
