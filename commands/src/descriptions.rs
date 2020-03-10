@@ -6,6 +6,7 @@ pub static PROGRESSBAR: &str = "Displays progress bars to the user";
 pub static PROMPT: &str = "Prompts the user for information";
 pub static SECRETS: &str = "Accesses the user's secret store";
 pub static SPINNER: &str = "Displays spinners to the user";
+pub static STATE: &str = "Accesses the workflow state";
 pub static TRACK: &str = "Track an analytics event";
 
 // Progress bar subcommands
@@ -38,4 +39,10 @@ pub mod secrets {
 pub mod spinner {
     pub static START: &str = "Starts a new spinner";
     pub static STOP: &str = "Stops the current spinner";
+}
+
+// State subcommands
+pub mod state {
+    pub static GET: &str = "Gets a value from the current workflow state";
+    pub static SET: &str = "Sets a value in the current workflow state";
 }

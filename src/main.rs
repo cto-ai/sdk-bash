@@ -1,4 +1,5 @@
 use clap::{crate_authors, crate_version, App};
+use commands::state;
 use commands::ux::print;
 use commands::ux::progressbar;
 use commands::ux::prompt;
@@ -16,6 +17,7 @@ fn main() {
         .subcommand(prompt::init_cli_command())
         .subcommand(secrets::init_cli_command())
         .subcommand(spinner::init_cli_command())
+        .subcommand(state::init_cli_command())
         .subcommand(track::init_cli_command())
         .get_matches();
 
@@ -25,6 +27,7 @@ fn main() {
         ("prompt", Some(prompt_matches)) => prompt::run(prompt_matches),
         ("secrets", Some(secrets_matches)) => secrets::run(secrets_matches),
         ("spinner", Some(spinner_matches)) => spinner::run(spinner_matches),
+        ("state", Some(state_matches)) => state::run(state_matches),
         ("track", Some(track_matches)) => track::run(track_matches),
         _ => println!("Oops. No command found"),
     }
