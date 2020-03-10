@@ -23,22 +23,22 @@ pub fn print(text: &str) -> Result<(), RequestError> {
 
 #[cfg(test)]
 mod test {
-    extern crate httpmock;
     use super::*;
-    use httpmock::Method::POST;
-    use httpmock::{mock, with_mock_server};
+    use mockito::mock;
 
     #[test]
-    #[with_mock_server]
     fn test_ux_print() {
-        std::env::set_var("SDK_SPEAK_PORT", "5000");
-        let m = mock(POST, "/print")
-            .expect_header("Content-Type", "application/json")
-            .return_status(204)
+        std::env::set_var(
+            "SDK_SPEAK_PORT",
+            mockito::server_address().port().to_string(),
+        );
+        let m = mock("POST", "/print")
+            .match_header("Content-Type", "application/json")
+            .with_status(204)
             .create();
         // TODO: we need to go back to this test as the print request doesn't return anything
         // and the printint if done inside the daemon.
-        print("Some Value");
-        assert_eq!(m.times_called(), 1);
+        assert!(print("Some Value").is_ok());
+        m.assert();
     }
 }
