@@ -1,5 +1,4 @@
 use super::Prompt;
-use crate::{daemon::numberize, RequestError};
 use serde::Serialize;
 
 /// Public facing Number
@@ -20,7 +19,7 @@ pub struct Number<'a> {
     max: Option<i32>,
 }
 
-impl<'a> Prompt for Number<'a> {
+impl<'a> Prompt<i64> for Number<'a> {
     fn name(&self) -> &str {
         self.name
     }
@@ -70,10 +69,5 @@ impl<'a> Number<'a> {
     pub fn flag(mut self, flag: &'a str) -> Self {
         self.flag = Some(flag);
         self
-    }
-
-    /// Executes query based on the values set for Number
-    pub fn execute(self) -> Result<i64, RequestError> {
-        self.get_value().and_then(numberize)
     }
 }

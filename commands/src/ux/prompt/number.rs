@@ -2,7 +2,7 @@ use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use crate::validate::{numeric, NumericArg};
 use clap::{App, Arg};
-use cto_ai::ux::prompt::Number;
+use cto_ai::ux::prompt::{Number, Prompt};
 
 static MAX: &str = "max";
 static MIN: &str = "min";

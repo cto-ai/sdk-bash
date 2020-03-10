@@ -56,28 +56,3 @@ pub fn async_request(
 
     Ok(read_fifo(filename)?)
 }
-
-pub fn stringify(value: serde_json::Value) -> Result<String, RequestError> {
-    value
-        .as_str()
-        .map(str::to_owned)
-        .ok_or(RequestError::BadTypeError)
-}
-
-pub fn numberize(value: serde_json::Value) -> Result<i64, RequestError> {
-    value.as_i64().ok_or(RequestError::BadTypeError)
-}
-
-pub fn booleanize(value: serde_json::Value) -> Result<bool, RequestError> {
-    value.as_bool().ok_or(RequestError::BadTypeError)
-}
-
-pub fn arrayize(value: serde_json::Value) -> Result<Vec<String>, RequestError> {
-    value
-        .as_array()
-        .ok_or(RequestError::BadTypeError)?
-        .iter()
-        .cloned()
-        .map(stringify)
-        .collect()
-}

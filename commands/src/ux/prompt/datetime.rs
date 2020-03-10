@@ -2,7 +2,7 @@ use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use crate::validate::{datetime, DatetimeArg};
 use clap::{App, Arg};
-use cto_ai::ux::prompt::Datetime;
+use cto_ai::ux::prompt::{Datetime, Prompt};
 
 static MAX: &str = "max";
 static MIN: &str = "min";

@@ -1,5 +1,4 @@
 use super::Prompt;
-use crate::{daemon::stringify, RequestError};
 use serde::Serialize;
 
 /// Public facing Editor
@@ -16,7 +15,7 @@ pub struct Editor<'a> {
     default: Option<&'a str>,
 }
 
-impl<'a> Prompt for Editor<'a> {
+impl<'a> Prompt<String> for Editor<'a> {
     fn name(&self) -> &str {
         self.name
     }
@@ -52,10 +51,5 @@ impl<'a> Editor<'a> {
     pub fn flag(mut self, flag: &'a str) -> Self {
         self.flag = Some(flag);
         self
-    }
-
-    /// Executes query based on the values set for Editor
-    pub fn execute(self) -> Result<String, RequestError> {
-        self.get_value().and_then(stringify)
     }
 }

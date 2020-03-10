@@ -1,5 +1,4 @@
 use super::Prompt;
-use crate::{daemon::arrayize, RequestError};
 use serde::Serialize;
 
 /// Public facing Checkbox
@@ -17,7 +16,7 @@ pub struct Checkbox<'a> {
     default: Option<Vec<String>>,
 }
 
-impl<'a> Prompt for Checkbox<'a> {
+impl<'a> Prompt<Vec<String>> for Checkbox<'a> {
     fn name(&self) -> &str {
         self.name
     }
@@ -59,10 +58,5 @@ impl<'a> Checkbox<'a> {
     pub fn flag(mut self, flag: &'a str) -> Self {
         self.flag = Some(flag);
         self
-    }
-
-    /// Executes query based on the values set for Checkbox
-    pub fn execute(self) -> Result<Vec<String>, RequestError> {
-        self.get_value().and_then(arrayize)
     }
 }

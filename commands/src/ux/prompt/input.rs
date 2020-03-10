@@ -1,7 +1,7 @@
 use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
-use cto_ai::ux::prompt::Input;
+use cto_ai::ux::prompt::{Input, Prompt};
 
 static ALLOW_EMPTY: &str = "allow empty";
 

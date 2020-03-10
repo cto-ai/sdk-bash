@@ -1,7 +1,7 @@
 use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
-use cto_ai::ux::prompt::List;
+use cto_ai::ux::prompt::{List, Prompt};
 
 static CHOICES: &str = "choices";
 static AUTOCOMPLETE: &str = "autocomplete";

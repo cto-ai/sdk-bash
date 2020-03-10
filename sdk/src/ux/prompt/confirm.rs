@@ -1,5 +1,4 @@
 use super::Prompt;
-use crate::{daemon::booleanize, RequestError};
 use serde::Serialize;
 
 /// Public facing Confirm
@@ -16,7 +15,7 @@ pub struct Confirm<'a> {
     flag: Option<&'a str>,
 }
 
-impl<'a> Prompt for Confirm<'a> {
+impl<'a> Prompt<bool> for Confirm<'a> {
     fn name(&self) -> &str {
         self.name
     }
@@ -52,10 +51,5 @@ impl<'a> Confirm<'a> {
     pub fn flag(mut self, flag: &'a str) -> Self {
         self.flag = Some(flag);
         self
-    }
-
-    /// Executes query based on the values set for Confirm.
-    pub fn execute(self) -> Result<bool, RequestError> {
-        self.get_value().and_then(booleanize)
     }
 }

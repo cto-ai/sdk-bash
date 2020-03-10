@@ -1,5 +1,4 @@
 use super::Prompt;
-use crate::{daemon::stringify, RequestError};
 use serde::Serialize;
 
 /// Public facing Input
@@ -17,7 +16,7 @@ pub struct Input<'a> {
     flag: Option<&'a str>,
 }
 
-impl<'a> Prompt for Input<'a> {
+impl<'a> Prompt<String> for Input<'a> {
     fn name(&self) -> &str {
         self.name
     }
@@ -29,7 +28,7 @@ impl<'a> Input<'a> {
     /// # Example
     ///
     /// ```norun
-    /// use cto_ai::ux::prompt::Input;
+    /// use cto_ai::ux::prompt::{Prompt, Input};
     ///
     /// let input_val = Input::new("input", "Input").execute();
     /// println!("{}", input_val);
@@ -60,10 +59,5 @@ impl<'a> Input<'a> {
     pub fn flag(mut self, flag: &'a str) -> Self {
         self.flag = Some(flag);
         self
-    }
-
-    /// Executes query based on the values set for Input.
-    pub fn execute(self) -> Result<String, RequestError> {
-        self.get_value().and_then(stringify)
     }
 }
