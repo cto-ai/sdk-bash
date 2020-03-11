@@ -36,6 +36,13 @@ pub fn get_state<T: DeserializeOwned>(key: &str) -> Result<T, RequestError> {
     )?)?)
 }
 
+pub fn get_config<T: DeserializeOwned>(key: &str) -> Result<T, RequestError> {
+    Ok(serde_json::from_value(sync_request(
+        "config/get",
+        KeyBody { key },
+    )?)?)
+}
+
 #[derive(Debug, Clone, Serialize)]
 struct KeyValueBody<'a> {
     key: &'a str,
@@ -45,6 +52,16 @@ struct KeyValueBody<'a> {
 pub fn set_state(key: &str, value: impl Into<serde_json::Value>) -> Result<(), RequestError> {
     simple_request(
         "state/set",
+        KeyValueBody {
+            key,
+            value: value.into(),
+        },
+    )
+}
+
+pub fn set_config(key: &str, value: impl Into<serde_json::Value>) -> Result<(), RequestError> {
+    simple_request(
+        "config/set",
         KeyValueBody {
             key,
             value: value.into(),

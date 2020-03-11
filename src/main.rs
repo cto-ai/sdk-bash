@@ -1,17 +1,18 @@
 use clap::{crate_authors, crate_version, App};
-use commands::state;
 use commands::ux::print;
 use commands::ux::progressbar;
 use commands::ux::prompt;
 use commands::ux::secrets;
 use commands::ux::spinner;
 use commands::ux::track;
+use commands::{config, state};
 
 fn main() {
     let matches = App::new("CTO.ai Shell SDK")
         .version(crate_version!())
         .author(crate_authors!())
         .about(commands::APP)
+        .subcommand(config::init_cli_command())
         .subcommand(print::init_cli_command())
         .subcommand(progressbar::init_cli_command())
         .subcommand(prompt::init_cli_command())
@@ -22,6 +23,7 @@ fn main() {
         .get_matches();
 
     match matches.subcommand() {
+        ("config", Some(config_matches)) => config::run(config_matches),
         ("print", Some(print_matches)) => print::run(print_matches),
         ("progressbar", Some(progressbar_matches)) => progressbar::run(progressbar_matches),
         ("prompt", Some(prompt_matches)) => prompt::run(prompt_matches),

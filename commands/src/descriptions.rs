@@ -1,6 +1,7 @@
 pub static APP: &str = "CLI client for The Ops Platform built-in functionality";
 
 // Top level subcommands
+pub static CONFIG: &str = "Accesses the user's config for the current op";
 pub static PRINT: &str = "Displays text to the user";
 pub static PROGRESSBAR: &str = "Displays progress bars to the user";
 pub static PROMPT: &str = "Prompts the user for information";
@@ -45,4 +46,10 @@ pub mod spinner {
 pub mod state {
     pub static GET: &str = "Gets a value from the current workflow state";
     pub static SET: &str = "Sets a value in the current workflow state";
+}
+
+// Config subcommands
+pub mod config {
+    pub static GET: &str = "Gets a value from the current user's config";
+    pub static SET: &str = "Sets a value in the current user's config";
 }
