@@ -15,6 +15,7 @@ cache:
     - /var/cache/apk
 
 stages:
+  - test
   - build
 
 before_script:
@@ -31,6 +32,22 @@ before_script:
 after_script:
   - rm -rf /root/.ssh
 
+version:
+  stage: test
+  image: alpine:3.11.3
+  except:
+    - master
+  before_script:
+    - echo Begin check on incremented version in Cargo.toml
+  script:
+    - apk update && apk add git
+    - export CURRENT_VERSION=$(cat Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && echo "${value}"&& break; done)
+    - export MASTER_VERSION=$(git fetch && git --no-pager show origin/master:Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && echo "${value}" && break; done)
+    - echo -e "current is $CURRENT_VERSION\nmaster is $MASTER_VERSION"
+    - sh -c '[ "$1" != "$(echo -e "$1\n$2" | sort -V | head -n1)" ] && exit 0' sh "${CURRENT_VERSION}" "${MASTER_VERSION}"
+  after_script:
+    - echo Done
+
 # Build stage for branches other than master (based on tag)
 build-branch:
   stage: build
@@ -40,9 +57,10 @@ build-branch:
   except:
     - master
   script:
+    - export CURRENT_VERSION=$(Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && temp="${value%\"}" && echo "${temp#\"}" && break; done)
     - docker login -u $PUBLIC_CI_USER -p $PUBLIC_CI_TOKEN $CI_PUBLIC_REGISTRY
-    - docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:$BUSTER_IMAGE_TAG .
-    - docker push $IMAGE_NAME:$BUSTER_IMAGE_TAG
+    - docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG .
+    - docker push $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG
 
 # Build stage for the master branch (automatic)
 build-master:
@@ -51,8 +69,15 @@ build-master:
     - master
   image: docker:stable
   script:
+    - export CURRENT_VERSION=$(cat Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && temp="${value%\"}" && echo "${temp#\"}" && break; done)
+    - export CURRENT_MAJOR_VERSION="${CURRENT_VERSION%%.*}"
+    - export CURRENT_MAJOR_MINOR_VERSION="${CURRENT_VERSION%.*}"
     - docker login -u $PUBLIC_CI_USER -p $PUBLIC_CI_TOKEN $CI_PUBLIC_REGISTRY
-    - docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:$BUSTER_IMAGE_TAG .
-    - docker tag $IMAGE_NAME:$BUSTER_IMAGE_TAG $IMAGE_NAME:latest
-    - docker push $IMAGE_NAME:$BUSTER_IMAGE_TAG
+    - docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:latest .
+    - docker tag $IMAGE_NAME:latest $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG
+    - docker tag $IMAGE_NAME:latest $IMAGE_NAME:$CURRENT_MAJOR_VERSION-$BUSTER_IMAGE_TAG
+    - docker tag $IMAGE_NAME:latest $IMAGE_NAME:$CURRENT_MAJOR_MINOR_VERSION-$BUSTER_IMAGE_TAG
     - docker push $IMAGE_NAME:latest
+    - docker push $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG
+    - docker push $IMAGE_NAME:$CURRENT_MAJOR_VERSION-$BUSTER_IMAGE_TAG
+    - docker push $IMAGE_NAME:$CURRENT_MAJOR_MINOR_VERSION-$BUSTER_IMAGE_TAG
