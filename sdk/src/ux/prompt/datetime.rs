@@ -1,5 +1,4 @@
 use super::Prompt;
-use crate::{daemon::stringify, RequestError};
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 
@@ -23,14 +22,14 @@ pub struct Datetime<'a> {
     max: Option<DateTime<Utc>>,
 }
 
-impl<'a> Prompt for Datetime<'a> {
+impl<'a> Prompt<String> for Datetime<'a> {
     fn name(&self) -> &str {
         self.name
     }
 }
 
 impl<'a> Datetime<'a> {
-    /// Returtns a new Datetime
+    /// Returns a new Datetime prompt
     ///
     /// # Example
     ///
@@ -96,10 +95,5 @@ impl<'a> Datetime<'a> {
     pub fn flag(mut self, flag: &'a str) -> Self {
         self.flag = Some(flag);
         self
-    }
-
-    /// Executes query based on the values set for Datetime
-    pub fn execute(self) -> Result<String, RequestError> {
-        self.get_value().and_then(stringify)
     }
 }

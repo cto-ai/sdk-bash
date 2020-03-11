@@ -1,4 +1,4 @@
-use crate::daemon::{async_request, stringify};
+use crate::daemon::async_request;
 use crate::RequestError;
 use serde::Serialize;
 
@@ -28,7 +28,7 @@ impl<'a> Secrets<'a> {
         self.name = Some(name);
         async_request("secret/get", self)
             .and_then(|value| value.get(name).cloned().ok_or(RequestError::JsonKeyError))
-            .and_then(stringify)
+            .and_then(|v| Ok(serde_json::from_value(v)?))
     }
 
     /// Sets a secret to the user's vault.

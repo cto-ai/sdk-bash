@@ -1,7 +1,7 @@
 use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
-use cto_ai::ux::prompt::Editor;
+use cto_ai::ux::prompt::{Editor, Prompt};
 
 // Init the cli commands for the Editor prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {

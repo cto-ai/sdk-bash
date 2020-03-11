@@ -1,7 +1,7 @@
 use super::{FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
-use cto_ai::ux::prompt::Confirm;
+use cto_ai::ux::prompt::{Confirm, Prompt};
 
 static DEFAULT_TRUE: &str = "default-true";
 static DEFAULT_FALSE: &str = "default-false";

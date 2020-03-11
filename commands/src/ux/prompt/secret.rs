@@ -1,7 +1,7 @@
 use super::{FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
-use cto_ai::ux::prompt::Secret;
+use cto_ai::ux::prompt::{Prompt, Secret};
 
 // Init the cli commands for the Secret prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {

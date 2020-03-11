@@ -1,5 +1,4 @@
 use super::Prompt;
-use crate::{daemon::stringify, RequestError};
 use serde::Serialize;
 
 /// Public facing Password
@@ -15,7 +14,7 @@ pub struct Password<'a> {
     confirm: bool,
 }
 
-impl<'a> Prompt for Password<'a> {
+impl<'a> Prompt<String> for Password<'a> {
     fn name(&self) -> &str {
         self.name
     }
@@ -51,10 +50,5 @@ impl<'a> Password<'a> {
     pub fn flag(mut self, flag: &'a str) -> Self {
         self.flag = Some(flag);
         self
-    }
-
-    /// Executes query based on the values set for Password.
-    pub fn execute(self) -> Result<String, RequestError> {
-        self.get_value().and_then(stringify)
     }
 }

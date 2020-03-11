@@ -1,7 +1,7 @@
 use super::{FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
-use cto_ai::ux::prompt::Password;
+use cto_ai::ux::prompt::{Password, Prompt};
 
 static CONFIRM: &str = "confirm";
 

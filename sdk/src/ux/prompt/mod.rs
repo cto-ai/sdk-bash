@@ -19,17 +19,19 @@ pub use password::Password;
 pub use secret::Secret;
 
 use crate::{daemon, RequestError};
-use serde::Serialize;
+use serde::{de::DeserializeOwned, Serialize};
 
-pub trait Prompt: Serialize + Clone {
+pub trait Prompt<T: DeserializeOwned>: Serialize + Clone {
     fn name(&self) -> &str;
 
-    fn get_value(self) -> Result<serde_json::Value, RequestError> {
-        daemon::async_request("prompt", &self).and_then(|value| {
-            value
-                .get(self.name())
-                .cloned()
-                .ok_or(RequestError::JsonKeyError)
-        })
+    fn execute(self) -> Result<T, RequestError> {
+        daemon::async_request("prompt", &self)
+            .and_then(|value| {
+                value
+                    .get(self.name())
+                    .cloned()
+                    .ok_or(RequestError::JsonKeyError)
+            })
+            .and_then(|v| Ok(serde_json::from_value(v)?))
     }
 }

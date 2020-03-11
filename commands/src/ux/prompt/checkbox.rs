@@ -1,7 +1,7 @@
 use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
 use clap::{App, Arg};
-use cto_ai::ux::prompt::Checkbox;
+use cto_ai::ux::prompt::{Checkbox, Prompt};
 
 static CHOICES: &str = "choices";
 

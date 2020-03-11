@@ -1,5 +1,4 @@
 use super::Prompt;
-use crate::{daemon::stringify, RequestError};
 use serde::Serialize;
 
 static LIST_TYPE: &str = "list";
@@ -20,7 +19,7 @@ pub struct List<'a> {
     choices: Vec<String>,
 }
 
-impl<'a> Prompt for List<'a> {
+impl<'a> Prompt<String> for List<'a> {
     fn name(&self) -> &str {
         self.name
     }
@@ -62,10 +61,5 @@ impl<'a> List<'a> {
     pub fn flag(mut self, flag: &'a str) -> Self {
         self.flag = Some(flag);
         self
-    }
-
-    /// Executes query based on the values set for List.
-    pub fn execute(self) -> Result<String, RequestError> {
-        self.get_value().and_then(stringify)
     }
 }
