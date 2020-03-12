@@ -2,12 +2,12 @@ use std::env;
 use std::fs::File;
 use std::io::BufReader;
 
-use reqwest::Client;
+use reqwest::blocking::{Client, Response};
 use serde::{Deserialize, Serialize};
 
 use crate::RequestError;
 
-fn make_request<T: Serialize>(endpoint: &str, body: T) -> Result<reqwest::Response, RequestError> {
+fn make_request<T: Serialize>(endpoint: &str, body: T) -> Result<Response, RequestError> {
     let port = env::var("SDK_SPEAK_PORT").expect("SDK_SPEAK_PORT environment variable not set");
 
     Ok(Client::new()
