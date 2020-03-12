@@ -11,7 +11,7 @@ RUN cargo build --release && strip /sdk/target/release/bash-sdk
 ################################
 # Copy the bash sdk to the base image
 ################################
-FROM registry.cto.ai/official_images/base:buster-slim
+FROM registry.cto.ai/official_images/base:2-buster-slim
 
 RUN apt-get update && \
     apt-get install -y curl
