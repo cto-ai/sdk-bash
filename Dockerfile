@@ -5,7 +5,7 @@ FROM rust:1.40 as build
 
 WORKDIR sdk
 COPY . .
-RUN cargo build --release
+RUN cargo build --release && strip /sdk/target/release/bash-sdk
 
 
 ################################
