@@ -16,8 +16,13 @@ mod get {
     }
 
     pub fn run(matches: &clap::ArgMatches) {
-        let final_value: Option<String> = get_config(matches.value_of(KEY).unwrap()).unwrap();
-        println!("{}", final_value.unwrap_or_default())
+        let final_value: Option<serde_json::Value> =
+            get_config(matches.value_of(KEY).unwrap()).unwrap();
+        match final_value {
+            None => println!(),
+            Some(serde_json::Value::String(s)) => println!("{}", s),
+            Some(v) => println!("{}", v.to_string()),
+        }
     }
 }
 
