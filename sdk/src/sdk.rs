@@ -1,6 +1,7 @@
 use crate::daemon::{simple_request, sync_request};
 use crate::RequestError;
 use serde::{de::DeserializeOwned, Serialize};
+use serde_json::json;
 use std::collections::HashMap;
 use std::env;
 
@@ -22,6 +23,20 @@ pub fn get_host_os() -> String {
 
 pub fn get_interface_type() -> String {
     env::var("SDK_INTERFACE_TYPE").unwrap_or_else(|_| "terminal".to_owned())
+}
+
+pub fn get_all_state() -> Result<HashMap<String, serde_json::Value>, RequestError> {
+    Ok(serde_json::from_value(sync_request(
+        "state/get-all",
+        json!({}),
+    )?)?)
+}
+
+pub fn get_all_config() -> Result<HashMap<String, serde_json::Value>, RequestError> {
+    Ok(serde_json::from_value(sync_request(
+        "config/get-all",
+        json!({}),
+    )?)?)
 }
 
 #[derive(Debug, Clone, Serialize)]

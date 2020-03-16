@@ -1,23 +1,42 @@
 mod get {
     use crate::descriptions::state as descriptions;
     use clap::{App, Arg};
-    use cto_ai::sdk::get_state;
+    use cto_ai::sdk::{get_all_state, get_state};
 
     static KEY: &str = "key";
+    static ALL: &str = "all";
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("get").about(descriptions::GET).arg(
-            Arg::with_name(KEY)
-                .index(1)
-                .help("The key of the desired value in the workflow state")
-                .value_name("KEY")
-                .required(true),
-        )
+        App::new("get")
+            .about(descriptions::GET)
+            .arg(
+                Arg::with_name(KEY)
+                    .index(1)
+                    .help("The key of the desired value in the workflow state")
+                    .value_name("KEY")
+                    .required_unless(ALL),
+            )
+            .arg(
+                Arg::with_name(ALL)
+                    .long(ALL)
+                    .short("a")
+                    .help("Get a JSON representation of the full state"),
+            )
     }
 
     pub fn run(matches: &clap::ArgMatches) {
-        let final_value: Option<String> = get_state(matches.value_of(KEY).unwrap()).unwrap();
-        println!("{}", final_value.unwrap_or_default())
+        if matches.is_present(ALL) {
+            let full_state = get_all_state().unwrap();
+            println!("{}", serde_json::to_string_pretty(&full_state).unwrap());
+        } else {
+            let final_value: Option<serde_json::Value> =
+                get_state(matches.value_of(KEY).unwrap()).unwrap();
+            match final_value {
+                None => println!(),
+                Some(serde_json::Value::String(s)) => println!("{}", s),
+                Some(v) => println!("{}", v.to_string()),
+            }
+        }
     }
 }
 

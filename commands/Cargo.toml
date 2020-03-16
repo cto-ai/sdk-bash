@@ -10,3 +10,4 @@ edition = "2018"
 cto-ai = { path = "../sdk" }
 clap = "2.33.0"
 chrono = {version = "0.4"}
+serde_json = "1"
