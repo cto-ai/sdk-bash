@@ -13,6 +13,7 @@ fn main() {
         .subcommand(progressbar::init_cli_command())
         .subcommand(prompt::init_cli_command())
         .subcommand(spinner::init_cli_command())
+        .setting(clap::AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
     match matches.subcommand() {
@@ -20,6 +21,6 @@ fn main() {
         ("progressbar", Some(progressbar_matches)) => progressbar::run(progressbar_matches),
         ("prompt", Some(prompt_matches)) => prompt::run(prompt_matches),
         ("spinner", Some(spinner_matches)) => spinner::run(spinner_matches),
-        _ => println!("Oops. No command found"),
+        _ => unreachable!(),
     }
 }

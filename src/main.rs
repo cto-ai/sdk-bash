@@ -20,6 +20,7 @@ fn main() {
         .subcommand(spinner::init_cli_command())
         .subcommand(state::init_cli_command())
         .subcommand(track::init_cli_command())
+        .setting(clap::AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
     match matches.subcommand() {
@@ -31,6 +32,6 @@ fn main() {
         ("spinner", Some(spinner_matches)) => spinner::run(spinner_matches),
         ("state", Some(state_matches)) => state::run(state_matches),
         ("track", Some(track_matches)) => track::run(track_matches),
-        _ => println!("Oops. No command found"),
+        _ => unreachable!(),
     }
 }
