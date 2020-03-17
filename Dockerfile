@@ -5,7 +5,7 @@ FROM rust:1.40 as build
 
 WORKDIR sdk
 COPY . .
-RUN cargo build --release && strip /sdk/target/release/bash-sdk
+RUN cargo build --release && strip /sdk/target/release/bash-sdk && strip /sdk/target/release/sdk && strip /sdk/target/release/ux
 
 
 ################################
@@ -17,3 +17,4 @@ RUN apt-get update && \
     apt-get install -y curl
 
 COPY --from=build /sdk/target/release/bash-sdk /usr/local/bin/ctoai
+COPY --from=build /sdk/target/release/sdk /sdk/target/release/ux /usr/local/bin/

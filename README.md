@@ -5,27 +5,27 @@ SDK for creating ops using bash.
 ## Input
 
 ```shell
-$ bash-sdk prompt input -a \
-  --message "Some message" \
-  --name "input" \
-  --default-value Value
+$ ux prompt input -a \
+  --message="Some message" \
+  --name="input" \
+  --default=Value
 ```
 
 ## Editor
 
 ```shell
-$ bash-sdk prompt editor \
-   --message "Some message" \
-   --name "input" \
-   --default-value Value
+$ ux prompt editor \
+   --message="Some message" \
+   --name="input" \
+   --default=Value
 ```
 
 ## Confirm
 
 ```shell
-$ bash-sdk prompt confirm --default-true \
-  --message "Some message" \
-  --name "input name"
+$ ux prompt confirm --default-true \
+  --message="Some message" \
+  --name="input name"
 ```
 
 ## Autocomplete
@@ -33,50 +33,47 @@ $ bash-sdk prompt confirm --default-true \
 ### Example 1
 
 ```shell
-$ bash-sdk prompt autocomplete \
+$ ux prompt list --autocomplete \
  -n "autocomplete" \
  -m "Autocomplete Message" \
  -d val3 \
- -c val1 val2 val3 val4
+ val1 val2 val3 val4
 ```
 
 ### Example 2
 
 ```shell
-$ ls list_fixture | xargs bash-sdk prompt autocomplete \
+$ ls list_fixture | xargs ux prompt list -a \
  -n "autocomplete" \
  -m "Autocomplete Message" \
- -d file1.js \
- -c
+ -d file1.js
 ```
 
 ### Example 3
 
 ```shell
-$ cat list_fixture/list.txt | tr "\n" " " | xargs bash-sdk prompt autocomplete \
+$ cat list_fixture/list.txt | tr "\n" " " | xargs ux prompt list \
+ -a \
  -n "autocomplete" \
  -m "Autocomplete Message" \
- -d "item 1" \
- -c
+ -d "item 1"
 ```
 
-## Checkout
+## Checkbox
 
 ```shell
-$ cat list_fixture/list.txt | tr "\n" " " | xargs bash-sdk prompt checkbox \
+$ cat list_fixture/list.txt | tr "\n" " " | xargs ux prompt checkbox \
  -n "checkout" \
- -m "Checkout Message" \
- -c
+ -m "Checkout Message"
 ```
 
 ## List
 
 ```shell
-$ cat list_fixture/list.txt | tr "\n" " " | xargs bash-sdk prompt list \
+$ cat list_fixture/list.txt | tr "\n" " " | xargs ux prompt list \
  -n "list" \
  -m "List Message" \
- -d "item 1" \
- -c
+ -d "item 1"
 ```
 
 ## Datetime
@@ -86,30 +83,30 @@ $ cat list_fixture/list.txt | tr "\n" " " | xargs bash-sdk prompt list \
 # Formats "2019-12-11T21:37:12-08:00" or "2019-12-11T13:39:37Z"
 # date -u +%FT%TZ
 
-$ bash-sdk prompt datetime \
+$ ux prompt datetime \
  -n "datetime" \
  -m "Datetime Message" \
  -d "2019-12-20T00:00:00-08:00" \
- --min "2019-12-11T00:00:00-08:00" \
- --max "2019-12-28T00:00:00-08:00" \
- --variant "date"
+ --min="2019-12-11T00:00:00-08:00" \
+ --max="2019-12-28T00:00:00-08:00" \
+ --date
 ```
 
 ## Number
 
 ```shell
-$ bash-sdk prompt number \
+$ ux prompt number \
  -n "number" \
  -m "Number Message" \
  -d 5 \
- --min 1 \
- --max 10
+ --min=1 \
+ --max=10
 ```
 
 ## Password
 
 ```shell
-$ bash-sdk prompt password \
+$ ux prompt password \
  -n "password" \
  -m "Password Message" \
  --confirm
@@ -118,29 +115,29 @@ $ bash-sdk prompt password \
 ## Secret
 
 ```shell
-$ bash-sdk prompt secret -n "secret" -m "Secret Message"
+$ ux prompt secret -n "secret" -m "Secret Message"
 ```
 
 # Spinner
 
 ```shell
-$ bash-sdk spinner start -m "Starting process"
+$ ux spinner start -m "Starting process"
 $ sleep 5
-$ bash-sdk spinner stop -m "Done!"
+$ ux spinner stop -m "Done!"
 ```
 
 # Progress Bar
 
 ```shell
-$ bash-sdk progressbar start -l 5 -m Downloading
-$ for ((i=1;i<=5;++i)); do sleep 1; bash-sdk progressbar advance; done
-$ bash-sdk progressbar stop -m Download Done!
+$ ux progressbar start -l 5 -m Downloading
+$ for ((i=1;i<=5;++i)); do sleep 1; ux progressbar advance; done
+$ ux progressbar stop -m 'Download Done!'
 ```
 
 # Print
 
 ```shell
-$ bash-sdk print some text
+$ ux print some text
 ```
 
 # Secrets
@@ -148,11 +145,51 @@ $ bash-sdk print some text
 ## Get
 
 ```shell
-# bash-sdk secrets get -n name
+$ sdk secret get name
 ```
 
 ## Set
 
 ```shell
-# bash-sdk secrets set -n name -s secret
+$ sdk secret set -k name -v secret
+```
+
+# State
+
+## Get
+
+```shell
+$ sdk state get name
+```
+
+## Get All
+
+```shell
+$ sdk state get -a
+```
+
+## Set
+
+```shell
+$ sdk state set -k name -v state
+```
+
+# Config
+
+## Get
+
+```shell
+$ sdk config get name
+```
+
+## Get All
+
+```shell
+$ sdk config get -a
+```
+
+## Set
+
+```shell
+$ sdk config set -k name -v config
 ```
