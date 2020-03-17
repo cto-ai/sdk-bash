@@ -1,0 +1,25 @@
+use clap::{crate_authors, crate_version, App};
+use commands::ux::print;
+use commands::ux::progressbar;
+use commands::ux::prompt;
+use commands::ux::spinner;
+
+fn main() {
+    let matches = App::new("CTO.ai Shell Client - UX")
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about(commands::APP)
+        .subcommand(print::init_cli_command())
+        .subcommand(progressbar::init_cli_command())
+        .subcommand(prompt::init_cli_command())
+        .subcommand(spinner::init_cli_command())
+        .get_matches();
+
+    match matches.subcommand() {
+        ("print", Some(print_matches)) => print::run(print_matches),
+        ("progressbar", Some(progressbar_matches)) => progressbar::run(progressbar_matches),
+        ("prompt", Some(prompt_matches)) => prompt::run(prompt_matches),
+        ("spinner", Some(spinner_matches)) => spinner::run(spinner_matches),
+        _ => println!("Oops. No command found"),
+    }
+}
