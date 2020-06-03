@@ -84,6 +84,13 @@ pub fn set_config(key: &str, value: impl Into<serde_json::Value>) -> Result<(), 
     )
 }
 
+pub fn delete_config<T: DeserializeOwned>(key: &str) -> Result<T, RequestError> {
+    Ok(serde_json::from_value(sync_request(
+        "config/delete",
+        KeyBody { key },
+  )?)?)
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct Track<'a> {
     #[serde(default)]
