@@ -32,7 +32,7 @@ pub fn get_all_state() -> Result<HashMap<String, serde_json::Value>, RequestErro
     )?)?)
 }
 
-pub fn get_all_config() -> Result<HashMap<String, serde_json::Value>, RequestError> {
+pub fn get_all_config() -> Result<HashMap<String, String>, RequestError> {
     Ok(serde_json::from_value(sync_request(
         "config/get-all",
         json!({}),
@@ -51,7 +51,7 @@ pub fn get_state<T: DeserializeOwned>(key: &str) -> Result<T, RequestError> {
     )?)?)
 }
 
-pub fn get_config<T: DeserializeOwned>(key: &str) -> Result<T, RequestError> {
+pub fn get_config(key: &str) -> Result<Option<String>, RequestError> {
     Ok(serde_json::from_value(sync_request(
         "config/get",
         KeyBody { key },
