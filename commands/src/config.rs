@@ -101,13 +101,9 @@ mod delete {
     }
 
     pub fn run(matches: &clap::ArgMatches) {
-        let final_value: Option<serde_json::Value> = delete_config(matches.value_of(KEY).unwrap()).unwrap();
-        match final_value {
-          None => println!(),
-          Some(serde_json::Value::String(s)) => println!("{}", s),
-          Some(v) => println!("{}", v.to_string()),
-        }
-  }
+        let final_value = delete_config(matches.value_of(KEY).unwrap()).unwrap();
+        println!("{}", final_value.to_string())
+    }
 }
 
 use crate::descriptions;
