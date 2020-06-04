@@ -1,11 +1,11 @@
 pub static APP: &str = "CLI client for The Ops Platform built-in functionality";
 
 // Top level subcommands
-pub static CONFIG: &str = "Accesses the user's config for the current op";
+pub static CONFIG: &str = "Accesses the configuration store for the current op";
 pub static PRINT: &str = "Displays text to the user";
 pub static PROGRESSBAR: &str = "Displays progress bars to the user";
 pub static PROMPT: &str = "Prompts the user for information";
-pub static SECRETS: &str = "Accesses the user's secret store";
+pub static SECRETS: &str = "Accesses the secret store";
 pub static SPINNER: &str = "Displays spinners to the user";
 pub static STATE: &str = "Accesses the workflow state";
 pub static TRACK: &str = "Track an analytics event";
@@ -32,8 +32,8 @@ pub mod prompt {
 
 // Secret subcommands
 pub mod secrets {
-    pub static GET: &str = "Gets a secret from the user's secret store";
-    pub static SET: &str = "Sets a secret in the user's secret store";
+    pub static GET: &str = "Gets a secret from the secret store";
+    pub static SET: &str = "Sets a secret in the secret store";
 }
 
 // Spinner subcommands
@@ -50,6 +50,7 @@ pub mod state {
 
 // Config subcommands
 pub mod config {
-    pub static GET: &str = "Gets a value from the current user's config";
-    pub static SET: &str = "Sets a value in the current user's config";
+    pub static GET: &str = "Gets a value from the current configuration store";
+    pub static SET: &str = "Sets a value in the current configuration store";
+    pub static DELETE: &str = "Deletes a value from the configuration store";
 }
