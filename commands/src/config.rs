@@ -29,12 +29,10 @@ mod get {
             let full_config = get_all_config().unwrap();
             println!("{}", serde_json::to_string_pretty(&full_config).unwrap());
         } else {
-            let final_value: Option<serde_json::Value> =
-                get_config(matches.value_of(KEY).unwrap()).unwrap();
+          let final_value: Option<String> = get_config(matches.value_of(KEY).unwrap()).unwrap();
             match final_value {
                 None => println!(),
-                Some(serde_json::Value::String(s)) => println!("{}", s),
-                Some(v) => println!("{}", v.to_string()),
+                Some(s) => println!("{}", s),
             }
         }
     }
