@@ -91,9 +91,7 @@ mod delete {
             .about(descriptions::DELETE)
             .arg(
                 Arg::with_name(KEY)
-                    .short("k")
-                    .long(KEY)
-                    .alias("name")
+                    .index(1)
                     .help("The key of the desired value to be removed from the configuration store")
                     .value_name("KEY")
                     .required(true)
