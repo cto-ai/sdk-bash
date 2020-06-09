@@ -1,3 +1,4 @@
+pub mod events;
 pub mod print;
 pub mod progressbar;
 pub mod prompt;
