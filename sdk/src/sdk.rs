@@ -85,10 +85,23 @@ pub fn set_config(key: &str, value: impl Into<serde_json::Value>) -> Result<(), 
 }
 
 pub fn delete_config(key: &str) -> Result<bool, RequestError> {
-  Ok(serde_json::from_value(sync_request(
-      "config/delete",
-      KeyBody { key },
-)?)?)
+    Ok(serde_json::from_value(sync_request(
+        "config/delete",
+        KeyBody { key },
+    )?)?)
+}
+
+#[derive(Debug, Clone, Serialize)]
+struct EventsBody<'a> {
+    start: &'a str,
+    end: &'a str,
+}
+
+pub fn events(start: &str, end: &str) -> Result<Vec<serde_json::Value>, RequestError> {
+    Ok(serde_json::from_value(sync_request(
+        "events",
+        EventsBody { start, end },
+    )?)?)
 }
 
 #[derive(Debug, Clone, Serialize)]
