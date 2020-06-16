@@ -4,6 +4,8 @@ use crate::validate::{datetime, DatetimeArg};
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Datetime, Prompt};
 
+pub const CMD: &str = "datetime";
+
 static MAX: &str = "max";
 static MIN: &str = "min";
 static DATE: &str = "date";
@@ -11,7 +13,7 @@ static TIME: &str = "time";
 
 // Init the cli commands for the datetime prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("datetime")
+    App::new(CMD)
         .about(prompt::DATETIME)
         .arg(
             Arg::with_name(NAME)

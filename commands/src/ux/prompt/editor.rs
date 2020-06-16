@@ -3,9 +3,11 @@ use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Editor, Prompt};
 
+pub const CMD: &str = "editor";
+
 // Init the cli commands for the Editor prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("editor")
+    App::new(CMD)
         .about(prompt::EDITOR)
         .arg(
             Arg::with_name(NAME)

@@ -17,10 +17,10 @@ fn main() {
         .get_matches();
 
     match matches.subcommand() {
-        ("print", Some(print_matches)) => print::run(print_matches),
-        ("progressbar", Some(progressbar_matches)) => progressbar::run(progressbar_matches),
-        ("prompt", Some(prompt_matches)) => prompt::run(prompt_matches),
-        ("spinner", Some(spinner_matches)) => spinner::run(spinner_matches),
+        (print::CMD, Some(print_matches)) => print::run(print_matches),
+        (progressbar::CMD, Some(progressbar_matches)) => progressbar::run(progressbar_matches),
+        (prompt::CMD, Some(prompt_matches)) => prompt::run(prompt_matches),
+        (spinner::CMD, Some(spinner_matches)) => spinner::run(spinner_matches),
         _ => unreachable!(),
     }
 }

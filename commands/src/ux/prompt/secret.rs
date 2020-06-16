@@ -3,9 +3,11 @@ use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Prompt, Secret};
 
+pub const CMD: &str = "secret";
+
 // Init the cli commands for the Secret prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("secret")
+    App::new(CMD)
         .about(prompt::SECRET)
         .arg(
             Arg::with_name(NAME)

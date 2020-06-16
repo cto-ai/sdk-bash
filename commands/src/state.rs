@@ -1,3 +1,5 @@
+// THIS MODULE IS DEPRECATED
+
 mod get {
     use crate::descriptions::state as descriptions;
     use clap::{App, Arg};
@@ -82,8 +84,10 @@ mod set {
 use crate::descriptions;
 use clap::{App, ArgMatches};
 
+pub const CMD: &str = "state";
+
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("state")
+    App::new(CMD)
         .about(descriptions::STATE)
         .subcommand(get::init_cli_command())
         .subcommand(set::init_cli_command())
