@@ -3,11 +3,13 @@ use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Input, Prompt};
 
+pub const CMD: &str = "input";
+
 static ALLOW_EMPTY: &str = "allow empty";
 
 // Init the cli commands for the input prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("input")
+    App::new(CMD)
         .about(prompt::INPUT)
         .arg(
             Arg::with_name(NAME)

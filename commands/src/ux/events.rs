@@ -3,11 +3,12 @@ use chrono::prelude::*;
 use clap::{App, Arg, ArgMatches};
 use cto_ai::sdk::events;
 
+pub const CMD: &str = "events";
 static START: &str = "start";
 static END: &str = "end";
 
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("events")
+    App::new(CMD)
         .about(descriptions::EVENTS)
         .arg(
             Arg::with_name(START)

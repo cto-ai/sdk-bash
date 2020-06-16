@@ -2,12 +2,14 @@ use crate::descriptions;
 use clap::{App, Arg, ArgMatches};
 use cto_ai::sdk::Track;
 
+pub const CMD: &str = "track";
+
 static EVENT: &str = "event";
 static ERROR: &str = "error";
 static PARAMS: &str = "params";
 
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("track")
+    App::new(CMD)
         .about(descriptions::TRACK)
         .arg(
             Arg::with_name(EVENT)

@@ -3,11 +3,13 @@ use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Checkbox, Prompt};
 
+pub const CMD: &str = "checkbox";
+
 static CHOICES: &str = "choices";
 
 // Init the cli commands for the Checkbox prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("checkbox")
+    App::new(CMD)
         .about(prompt::CHECKBOX)
         .arg(
             Arg::with_name(NAME)

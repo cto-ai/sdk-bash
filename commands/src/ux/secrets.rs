@@ -3,10 +3,12 @@ mod get {
     use clap::{App, Arg};
     use cto_ai::ux::secrets;
 
+    pub const CMD: &str = "get";
+
     static KEY: &str = "key";
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("get").about(descriptions::GET).arg(
+        App::new(CMD).about(descriptions::GET).arg(
             Arg::with_name(KEY)
                 .index(1)
                 .help("The key of the desired secret in the secret store")
@@ -28,11 +30,13 @@ mod set {
     use clap::{App, Arg};
     use cto_ai::ux::secrets;
 
+    pub const CMD: &str = "set";
+
     static KEY: &str = "key";
     static VALUE: &str = "value";
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("set")
+        App::new(CMD)
             .about(descriptions::SET)
             .arg(
                 Arg::with_name(KEY)
@@ -67,8 +71,10 @@ mod set {
 use crate::descriptions;
 use clap::{App, ArgMatches};
 
+pub const CMD: &str = "secret";
+
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("secret")
+    App::new(CMD)
         .about(descriptions::SECRETS)
         .subcommand(get::init_cli_command())
         .subcommand(set::init_cli_command())
@@ -76,8 +82,8 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 pub fn run(matches: &ArgMatches) {
     match matches.subcommand() {
-        ("get", Some(get_matches)) => get::run(get_matches),
-        ("set", Some(set_matches)) => set::run(set_matches),
+        (get::CMD, Some(get_matches)) => get::run(get_matches),
+        (set::CMD, Some(set_matches)) => set::run(set_matches),
         _ => println!("Oops. No secrets command found"),
     }
 }

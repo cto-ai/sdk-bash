@@ -4,13 +4,15 @@ mod start {
     use clap::{App, Arg};
     use cto_ai::ux::progress_bar;
 
+    pub const CMD: &str = "start";
+
     static LENGTH: &str = "length";
     static MESSAGE: &str = "message";
     static INITIAL: &str = "initial";
 
     // Init the cli commands for progressbar start
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("start")
+        App::new(CMD)
             .about(progress::START)
             .arg(
                 Arg::with_name(LENGTH)
@@ -60,11 +62,13 @@ mod advance {
     use clap::{App, Arg};
     use cto_ai::ux::progress_bar;
 
+    pub const CMD: &str = "advance";
+
     static INCREMENT: &str = "increment";
 
     // Init the cli commands for progressbar advance
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("advance").about(progress::ADVANCE).arg(
+        App::new(CMD).about(progress::ADVANCE).arg(
             Arg::with_name(INCREMENT)
                 .help("Length to increment the progress bar by")
                 .index(1)
@@ -84,11 +88,13 @@ mod stop {
     use clap::{App, Arg};
     use cto_ai::ux::progress_bar;
 
+    pub const CMD: &str = "stop";
+
     static MESSAGE: &str = "message";
 
     // Init the cli commands for progressbar stop
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("stop").about(progress::STOP).arg(
+        App::new(CMD).about(progress::STOP).arg(
             Arg::with_name(MESSAGE)
                 .long(MESSAGE)
                 .short("m")
@@ -116,8 +122,10 @@ mod stop {
 use crate::descriptions;
 use clap::{App, ArgMatches};
 
+pub const CMD: &str = "progressbar";
+
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("progressbar")
+    App::new(CMD)
         .about(descriptions::PROGRESSBAR)
         .subcommand(start::init_cli_command())
         .subcommand(advance::init_cli_command())
@@ -126,9 +134,9 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 pub fn run(matches: &ArgMatches) {
     match matches.subcommand() {
-        ("start", Some(start_matches)) => start::run(start_matches),
-        ("advance", Some(advance_matches)) => advance::run(advance_matches),
-        ("stop", Some(stop_matches)) => stop::run(stop_matches),
+        (start::CMD, Some(start_matches)) => start::run(start_matches),
+        (advance::CMD, Some(advance_matches)) => advance::run(advance_matches),
+        (stop::CMD, Some(stop_matches)) => stop::run(stop_matches),
         _ => panic!("Oops. No progress bar command found"),
     }
 }

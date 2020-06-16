@@ -4,12 +4,14 @@ use crate::validate::{numeric, NumericArg};
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Number, Prompt};
 
+pub const CMD: &str = "number";
+
 static MAX: &str = "max";
 static MIN: &str = "min";
 
 // Init the cli commands for the number prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("number")
+    App::new(CMD)
         .about(prompt::NUMBER)
         .arg(
             Arg::with_name(NAME)

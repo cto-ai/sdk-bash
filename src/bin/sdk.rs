@@ -18,11 +18,11 @@ fn main() {
         .get_matches();
 
     match matches.subcommand() {
-        ("config", Some(config_matches)) => config::run(config_matches),
-        ("events", Some(events_matches)) => events::run(events_matches),
-        ("secrets", Some(secrets_matches)) => secrets::run(secrets_matches),
-        ("state", Some(state_matches)) => state::run(state_matches),
-        ("track", Some(track_matches)) => track::run(track_matches),
+        (config::CMD, Some(config_matches)) => config::run(config_matches),
+        (events::CMD, Some(events_matches)) => events::run(events_matches),
+        (secrets::CMD, Some(secrets_matches)) => secrets::run(secrets_matches),
+        (state::CMD, Some(state_matches)) => state::run(state_matches),
+        (track::CMD, Some(track_matches)) => track::run(track_matches),
         _ => unreachable!(),
     }
 }

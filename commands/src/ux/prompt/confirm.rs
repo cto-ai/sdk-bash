@@ -3,12 +3,14 @@ use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Confirm, Prompt};
 
+pub const CMD: &str = "confirm";
+
 static DEFAULT_TRUE: &str = "default-true";
 static DEFAULT_FALSE: &str = "default-false";
 
 // Init the cli commands for the Confirm prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("confirm")
+    App::new(CMD)
         .about(prompt::CONFIRM)
         .arg(
             Arg::with_name(NAME)
