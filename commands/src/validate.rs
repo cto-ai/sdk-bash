@@ -49,15 +49,3 @@ impl<'a> NumericArg for clap::ArgMatches<'a> {
         self.value_of(name)?.parse().ok()
     }
 }
-
-pub trait DatetimeArg {
-    fn value_of_datetime(&self, name: impl AsRef<str>) -> Option<chrono::DateTime<chrono::Utc>>;
-}
-
-impl<'a> DatetimeArg for clap::ArgMatches<'a> {
-    fn value_of_datetime(&self, name: impl AsRef<str>) -> Option<chrono::DateTime<chrono::Utc>> {
-        self.value_of(name)
-            .and_then(|value| chrono::DateTime::parse_from_rfc3339(value).ok())
-            .map(|dt| chrono::DateTime::from_utc(dt.naive_utc(), chrono::Utc))
-    }
-}

@@ -1,6 +1,5 @@
 use super::{DEFAULT, FLAG, MESSAGE, NAME};
 use crate::descriptions::prompt;
-use crate::validate::{datetime, DatetimeArg};
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Datetime, Prompt};
 
@@ -44,30 +43,33 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
                 .short("d")
                 .help(
                     "Sets default value for datetime. \
-                     Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z'",
+                     Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z' for full datetime\
+                              '2019-12-11' for date only\
+                              '13:35:00' for time only",
                 )
-                .value_name("DEFAULT VALUE")
-                .validator(datetime),
+                .value_name("DEFAULT VALUE"),
         )
         .arg(
             Arg::with_name(MIN)
                 .long(MIN)
                 .help(
                     "Sets minimum value for datetime. \
-                     Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z'",
+                     Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z' for full datetime\
+                              '2019-12-11' for date only\
+                              '13:35:00' for time only",
                 )
-                .value_name("MIN")
-                .validator(datetime),
+                .value_name("MIN"),
         )
         .arg(
             Arg::with_name(MAX)
                 .long(MAX)
                 .help(
                     "Sets maximum value for datetime. \
-                     Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z'",
+                     Formats: '2019-12-11T21:37:12-08:00' or '2019-12-11T13:39:37Z' for full datetime\
+                              '2019-12-11' for date only\
+                              '13:35:00' for time only",
                 )
-                .value_name("MAX")
-                .validator(datetime),
+                .value_name("MAX"),
         )
         .arg(
             Arg::with_name(DATE)
@@ -91,16 +93,16 @@ pub fn run(matches: &clap::ArgMatches) {
         matches.value_of(MESSAGE).unwrap(),
     );
 
-    if let Some(default) = matches.value_of_datetime(DEFAULT) {
+    if let Some(default) = matches.value_of(DEFAULT) {
         datetime = datetime.default_value(default);
     }
 
-    if let Some(min) = matches.value_of_datetime(MIN) {
-        datetime = datetime.min(min);
+    if let Some(min) = matches.value_of(MIN) {
+        datetime = datetime.minimum(min);
     }
 
-    if let Some(max) = matches.value_of_datetime(MAX) {
-        datetime = datetime.max(max);
+    if let Some(max) = matches.value_of(MAX) {
+        datetime = datetime.maximum(max);
     }
 
     if matches.is_present(DATE) {

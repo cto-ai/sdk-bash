@@ -1,5 +1,4 @@
 use super::Prompt;
-use chrono::{DateTime, Utc};
 use serde::Serialize;
 
 /// Public facing Datetime
@@ -13,13 +12,13 @@ pub struct Datetime<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     flag: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    default: Option<DateTime<Utc>>,
+    default: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
     variant: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    min: Option<DateTime<Utc>>,
+    minimum: Option<&'a str>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    max: Option<DateTime<Utc>>,
+    maximum: Option<&'a str>,
 }
 
 impl<'a> Prompt<String> for Datetime<'a> {
@@ -39,8 +38,8 @@ impl<'a> Datetime<'a> {
     ///
     /// let dt_val = Datetime::new("date", "DateTime")
     ///    .variant("time")
-    ///    .min(Utc::now())
-    ///    .max(Utc::now())
+    ///    .minimum(Utc::now())
+    ///    .maximum(Utc::now())
     ///    .execute();
     ///
     /// println!("{}", dt_val);
@@ -53,8 +52,8 @@ impl<'a> Datetime<'a> {
             flag: None,
             variant: None,
             default: None,
-            min: None,
-            max: None,
+            minimum: None,
+            maximum: None,
         }
     }
 
@@ -62,7 +61,7 @@ impl<'a> Datetime<'a> {
     ///
     /// Sets the  time to initialize the prompt with. If not specified, will default
     /// to the current time.
-    pub fn default_value(mut self, default: DateTime<Utc>) -> Self {
+    pub fn default_value(mut self, default: &'a str) -> Self {
         self.default = Some(default);
         self
     }
@@ -76,19 +75,19 @@ impl<'a> Datetime<'a> {
         self
     }
 
-    /// Optional min
+    /// Optional minimum
     ///
     /// The minimum time to permit in the prompt.
-    pub fn min(mut self, value: DateTime<Utc>) -> Self {
-        self.min = Some(value);
+    pub fn minimum(mut self, value: &'a str) -> Self {
+        self.minimum = Some(value);
         self
     }
 
-    /// Optional max
+    /// Optional maximum
     ///
     /// The maximum time to permit in the prompt.
-    pub fn max(mut self, value: DateTime<Utc>) -> Self {
-        self.max = Some(value);
+    pub fn maximum(mut self, value: &'a str) -> Self {
+        self.maximum = Some(value);
         self
     }
 
