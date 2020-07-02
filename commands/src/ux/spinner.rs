@@ -32,11 +32,13 @@ mod stop {
 
     pub const CMD: &str = "stop";
 
+    static MESSAGE: &str = "message";
+
     // Init the cli commands for spinner stop
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
         App::new(CMD).about(descriptions::STOP).arg(
-            Arg::with_name("message")
-                .long("message")
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
                 .help("Message to be displayed with the stopped spinner")
                 .value_name("MESSAGE")
@@ -46,7 +48,7 @@ mod stop {
 
     // Runs the spinner stop
     pub fn run(matches: &clap::ArgMatches) {
-        spinner::stop(matches.value_of("message").unwrap()).unwrap();
+        spinner::stop(matches.value_of(MESSAGE).unwrap()).unwrap();
     }
 }
 

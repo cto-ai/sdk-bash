@@ -1,5 +1,6 @@
 use clap::{crate_authors, crate_version, App};
 use commands::ux::events;
+use commands::ux::format;
 use commands::ux::print;
 use commands::ux::progressbar;
 use commands::ux::prompt;
@@ -15,6 +16,7 @@ fn main() {
         .about(commands::APP)
         .subcommand(config::init_cli_command())
         .subcommand(events::init_cli_command())
+        .subcommand(format::init_cli_command())
         .subcommand(print::init_cli_command())
         .subcommand(progressbar::init_cli_command())
         .subcommand(prompt::init_cli_command())
@@ -28,6 +30,7 @@ fn main() {
     match matches.subcommand() {
         (config::CMD, Some(config_matches)) => config::run(config_matches),
         (events::CMD, Some(events_matches)) => events::run(events_matches),
+        (format::CMD, Some(format_matches)) => format::run(format_matches),
         (print::CMD, Some(print_matches)) => print::run(print_matches),
         (progressbar::CMD, Some(progressbar_matches)) => progressbar::run(progressbar_matches),
         (prompt::CMD, Some(prompt_matches)) => prompt::run(prompt_matches),
