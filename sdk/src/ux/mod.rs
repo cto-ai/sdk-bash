@@ -1,3 +1,4 @@
+pub mod format;
 mod print;
 pub mod progress_bar;
 pub mod prompt;

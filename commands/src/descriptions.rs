@@ -3,6 +3,7 @@ pub static APP: &str = "CLI client for The Ops Platform built-in functionality";
 // Top level subcommands
 pub static CONFIG: &str = "Accesses the configuration store for the current op";
 pub static EVENTS: &str = "Retrieves analytics events for the current team";
+pub static FORMAT: &str = "Formats text with rich styling";
 pub static PRINT: &str = "Displays text to the user";
 pub static PROGRESSBAR: &str = "Displays progress bars to the user";
 pub static PROMPT: &str = "Prompts the user for information";
@@ -10,6 +11,12 @@ pub static SECRETS: &str = "Accesses the secret store";
 pub static SPINNER: &str = "Displays spinners to the user";
 pub static STATE: &str = "Accesses the workflow state";
 pub static TRACK: &str = "Track an analytics event";
+
+// Formatting subcommands
+pub mod format {
+    pub static BOLD: &str = "Formats the provided text as boldface";
+    pub static ITALIC: &str = "Formats the provided text as italics";
+}
 
 // Progress bar subcommands
 pub mod progress {
