@@ -3,6 +3,43 @@ use crate::RequestError;
 use serde::Serialize;
 
 #[derive(Debug, Clone, Serialize, Default)]
+pub struct GetSecret<'a> {
+    key: &'a str,
+    hidden: bool,
+}
+
+impl<'a> GetSecret<'a> {
+    pub fn new(key: &'a str) -> Self {
+        Self { key, hidden: false }
+    }
+
+    pub fn hidden(mut self) -> Self {
+        self.hidden = true;
+        self
+    }
+
+    pub fn execute(self) -> Result<String, RequestError> {
+        let name = self.key;
+        async_request("secret/get", self)
+            .and_then(|value| value.get(name).cloned().ok_or(RequestError::JsonKeyError))
+            .and_then(|v| Ok(serde_json::from_value(v)?))
+    }
+}
+
+/// Gets a secret from the user's vault.
+///
+/// # Example
+/// ```norun
+/// use cto_ai::ux::secrets;
+///
+/// let secret_val = secrets::get("SECRET_NAME").unwrap();
+/// println!("{}", secret_val);
+/// ```
+pub fn get(key: &str) -> Result<String, RequestError> {
+    GetSecret::new(key).execute()
+}
+
+#[derive(Debug, Clone, Serialize, Default)]
 pub struct Secrets<'a> {
     #[serde(rename = "key")]
     name: Option<&'a str>,
@@ -13,22 +50,6 @@ pub struct Secrets<'a> {
 impl<'a> Secrets<'a> {
     pub fn new() -> Self {
         Self::default()
-    }
-
-    /// Gets a secret from the user's vault.
-    ///
-    /// # Example
-    /// ```norun
-    /// use cto_ai::ux::secrets;
-    ///
-    /// let secret_val = secrets::Secrets::new().get("SECRET_NAME");
-    /// println!("{}", secret_val);
-    /// ```
-    pub fn get(mut self, name: &'a str) -> Result<String, RequestError> {
-        self.name = Some(name);
-        async_request("secret/get", self)
-            .and_then(|value| value.get(name).cloned().ok_or(RequestError::JsonKeyError))
-            .and_then(|v| Ok(serde_json::from_value(v)?))
     }
 
     /// Sets a secret to the user's vault.

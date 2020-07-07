@@ -6,21 +6,33 @@ mod get {
     pub const CMD: &str = "get";
 
     static KEY: &str = "key";
+    static HIDDEN: &str = "hidden";
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new(CMD).about(descriptions::GET).arg(
-            Arg::with_name(KEY)
-                .index(1)
-                .help("The key of the desired secret in the secret store")
-                .value_name("KEY")
-                .required(true),
-        )
+        App::new(CMD)
+            .about(descriptions::GET)
+            .arg(
+                Arg::with_name(KEY)
+                    .index(1)
+                    .help("The key of the desired secret in the secret store")
+                    .value_name("KEY")
+                    .required(true),
+            )
+            .arg(
+                Arg::with_name(HIDDEN)
+                    .long(HIDDEN)
+                    .short("H")
+                    .help("If supplied, hide the user message when retrieving an exact match"),
+            )
     }
 
     pub fn run(matches: &clap::ArgMatches) {
-        let final_value = secrets::Secrets::new()
-            .get(matches.value_of(KEY).unwrap())
-            .unwrap();
+        let mut get_secret = secrets::GetSecret::new(matches.value_of(KEY).unwrap());
+        if matches.is_present(HIDDEN) {
+            get_secret = get_secret.hidden();
+        }
+
+        let final_value = get_secret.execute().unwrap();
         println!("{}", final_value)
     }
 }
