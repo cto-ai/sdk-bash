@@ -1,3 +1,5 @@
+//! A Rust-language SDK for the daemon API
+
 mod daemon;
 mod error;
 pub mod sdk;

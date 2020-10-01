@@ -1,6 +1,9 @@
+//! Error definitions for the Rust SDK
+
 use custom_error::custom_error;
 
 custom_error! {
+    /// An error making the daemon request
     pub RequestError
 
     DaemonRequestError{source: reqwest::Error} = "Invalid request",
