@@ -1,3 +1,5 @@
+//! The SDK `sdk` module, just like other SDKs
+
 use crate::daemon::{simple_request, sync_request};
 use crate::RequestError;
 use serde::{de::DeserializeOwned, Serialize};
@@ -39,6 +41,7 @@ pub fn get_all_config() -> Result<HashMap<String, String>, RequestError> {
     )?)?)
 }
 
+/// A request body with a key in it
 #[derive(Debug, Clone, Serialize)]
 struct KeyBody<'a> {
     key: &'a str,
@@ -58,6 +61,7 @@ pub fn get_config(key: &str) -> Result<Option<String>, RequestError> {
     )?)?)
 }
 
+/// A request body with a value in it
 #[derive(Debug, Clone, Serialize)]
 struct KeyValueBody<'a> {
     key: &'a str,
