@@ -136,3 +136,21 @@ impl<'a> Track<'a> {
         simple_request("track", self)
     }
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct StartOp<'a> {
+    #[serde(default)]
+    workflowName: &'a str
+}
+
+impl<'a> StartOp<'a> {
+    pub fn new(workflowName: &'a str) -> Self {
+        Self {
+            workflowName
+        }
+    }
+
+    pub fn send(self) -> Result<(), RequestError> {
+        simple_request("track", self)
+    }
+}
