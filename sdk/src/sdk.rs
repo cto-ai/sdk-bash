@@ -139,14 +139,16 @@ impl<'a> Track<'a> {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct StartOp<'a> {
-    #[serde(default)]
-    workflow_name: &'a str
+    #[serde(rename(serialize = "workflowName"))]
+    workflow_name: &'a str,
+    trigger: bool
 }
 
 impl<'a> StartOp<'a> {
     pub fn new(workflow_name: &'a str) -> Self {
         Self {
-            workflow_name
+            workflow_name,
+            trigger: true
         }
     }
 
