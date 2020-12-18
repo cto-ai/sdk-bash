@@ -22,7 +22,7 @@ fn main() {
         ("secrets", Some(secrets_matches)) => secrets::run(secrets_matches),
         ("state", Some(state_matches)) => state::run(state_matches),
         ("track", Some(track_matches)) => track::run(track_matches),
-        ("start-op", Some(start_matches)) => start::run(start_matches),
+        ("start", Some(start_matches)) => start::run(start_matches),
         _ => unreachable!(),
     }
 }

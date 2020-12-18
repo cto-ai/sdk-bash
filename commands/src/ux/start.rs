@@ -6,7 +6,7 @@ static WORKFLOW_NAME: &str = "workflowName";
 
 
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("start-op")
+    App::new("start")
         .about(descriptions::START_OP)
         .arg(
             Arg::with_name(WORKFLOW_NAME)
@@ -19,6 +19,6 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 // Runs the print command
 pub fn run(matches: &ArgMatches) {
-    let start_op = StartOp::new(&matches.value_of(WORKFLOW_NAME).unwrap());
-    start_op.send().unwrap();
+    let start = StartOp::new(&matches.value_of(WORKFLOW_NAME).unwrap());
+    start.send().unwrap();
 }
