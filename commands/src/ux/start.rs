@@ -1,6 +1,6 @@
 use crate::descriptions;
 use clap::{App, Arg, ArgMatches};
-use cto_ai::sdk::StartOp
+use cto_ai::sdk::StartOp;
 
 static WORKFLOW_NAME: &str = "workflowName";
 
@@ -19,6 +19,6 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 // Runs the print command
 pub fn run(matches: &ArgMatches) {
-    let mut start_op = StartOp::new(&matches.value_of(WORKFLOW_NAME).unwrap());
+    let start_op = StartOp::new(&matches.value_of(WORKFLOW_NAME).unwrap());
     start_op.send().unwrap();
 }
