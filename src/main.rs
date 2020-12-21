@@ -7,6 +7,7 @@ use commands::ux::prompt;
 use commands::ux::secrets;
 use commands::ux::spinner;
 use commands::ux::track;
+use commands::ux::start;
 use commands::{config, state};
 
 fn main() {
@@ -24,6 +25,7 @@ fn main() {
         .subcommand(spinner::init_cli_command())
         .subcommand(state::init_cli_command())
         .subcommand(track::init_cli_command())
+        .subcommand(start::init_cli_command())
         .setting(clap::AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
@@ -38,6 +40,7 @@ fn main() {
         (spinner::CMD, Some(spinner_matches)) => spinner::run(spinner_matches),
         (state::CMD, Some(state_matches)) => state::run(state_matches),
         (track::CMD, Some(track_matches)) => track::run(track_matches),
+        (start::CMD, Some(start_matches)) => start::run(start_matches),
         _ => unreachable!(),
     }
 }
