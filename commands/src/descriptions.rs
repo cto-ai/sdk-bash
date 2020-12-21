@@ -9,6 +9,7 @@ pub static SECRETS: &str = "Accesses the secret store";
 pub static SPINNER: &str = "Displays spinners to the user";
 pub static STATE: &str = "Accesses the workflow state";
 pub static TRACK: &str = "Track an analytics event";
+pub static START_OP: &str = "Start a service/pipeline/command";
 
 // Progress bar subcommands
 pub mod progress {
