@@ -6,3 +6,4 @@ pub mod prompt;
 pub mod secrets;
 pub mod spinner;
 pub mod track;
+pub mod start;
