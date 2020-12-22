@@ -1,6 +1,6 @@
 [package]
 name = "bash-sdk"
-version = "2.6.0"
+version = "2.7.0"
 authors = ["Danielle Brook-Roberge <danielle@cto.ai>"]
 edition = "2018"
 
