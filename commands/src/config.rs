@@ -32,9 +32,11 @@ mod get {
             println!("{}", serde_json::to_string_pretty(&full_config).unwrap());
         } else {
             let final_value: Option<String> = get_config(matches.value_of(KEY).unwrap()).unwrap();
+          let final_value: Option<String> = get_config(matches.value_of(KEY).unwrap()).unwrap();
             match final_value {
                 None => println!(),
-                Some(s) => println!("{}", s),
+                Some(serde_json::Value::String(s)) => println!("{}", s),
+                Some(v) => println!("{}", v.to_string()),
             }
         }
     }
@@ -91,13 +93,15 @@ mod delete {
     static KEY: &str = "key";
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new(CMD).about(descriptions::DELETE).arg(
-            Arg::with_name(KEY)
-                .index(1)
-                .help("The key of the desired value to be removed from the configuration store")
-                .value_name("KEY")
-                .required(true),
-        )
+        App::new(CMD)
+            .about(descriptions::DELETE)
+            .arg(
+                Arg::with_name(KEY)
+                    .index(1)
+                    .help("The key of the desired value to be removed from the configuration store")
+                    .value_name("KEY")
+                    .required(true)
+            )
     }
 
     pub fn run(matches: &clap::ArgMatches) {

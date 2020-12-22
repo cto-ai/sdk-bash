@@ -61,5 +61,5 @@ pub mod state {
 pub mod config {
     pub static GET: &str = "Gets a value from the current configuration store";
     pub static SET: &str = "Sets a value in the current configuration store";
-    pub static DELETE: &str = "Deletes a value from the configuration store";
+    pub static DELETE: &str = "Deletes a value from the current user's configuration store";
 }
