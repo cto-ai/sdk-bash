@@ -109,19 +109,6 @@ pub fn events(start: &str, end: &str) -> Result<Vec<serde_json::Value>, RequestE
 }
 
 #[derive(Debug, Clone, Serialize)]
-struct EventsBody<'a> {
-    start: &'a str,
-    end: &'a str,
-}
-
-pub fn events(start: &str, end: &str) -> Result<Vec<serde_json::Value>, RequestError> {
-    Ok(serde_json::from_value(sync_request(
-        "events",
-        EventsBody { start, end },
-    )?)?)
-}
-
-#[derive(Debug, Clone, Serialize)]
 pub struct Track<'a> {
     #[serde(default)]
     tags: Vec<&'a str>,
