@@ -1,4 +1,4 @@
-use crate::daemon::simple_request;
+use crate::daemon::{simple_request, HttpMethod};
 use crate::RequestError;
 
 use serde::Serialize;
@@ -18,7 +18,7 @@ struct Spinner<'a> {
 /// ```
 pub fn start(text: &str) -> Result<(), RequestError> {
     let s = Spinner { text };
-    simple_request("start-spinner", s)
+    simple_request("start-spinner", s, HttpMethod::POST)
 }
 
 /// Stops the currently running spinner, replacing the message with the given text.
@@ -33,5 +33,5 @@ pub fn start(text: &str) -> Result<(), RequestError> {
 /// ```
 pub fn stop(text: &str) -> Result<(), RequestError> {
     let s = Spinner { text };
-    simple_request("stop-spinner", s)
+    simple_request("stop-spinner", s, HttpMethod::POST)
 }

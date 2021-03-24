@@ -7,14 +7,25 @@ use serde::{Deserialize, Serialize};
 
 use crate::RequestError;
 
-fn make_request<T: Serialize>(endpoint: &str, body: T) -> Result<Response, RequestError> {
+pub enum HttpMethod {
+    GET,
+    POST,
+}
+
+fn make_request<T: Serialize>(endpoint: &str, body: T, method: HttpMethod) -> Result<Response, RequestError> {
     let port = env::var("SDK_SPEAK_PORT").expect("SDK_SPEAK_PORT environment variable not set");
 
-    Ok(Client::new()
-        .post(&format!("http://localhost:{}/{}", port, endpoint))
-        .json(&body)
-        .send()?
-        .error_for_status()?)
+    match method {
+        HttpMethod::POST => Ok(Client::new()
+            .post(&format!("http://localhost:{}/{}", port, endpoint))
+            .json(&body)
+            .send()?
+            .error_for_status()?),
+        HttpMethod::GET => Ok(Client::new()
+            .get(&format!("http://localhost:{}/{}", port, endpoint))
+            .send()?
+            .error_for_status()?),
+    }
 }
 
 fn read_fifo(filename: String) -> Result<serde_json::Value, RequestError> {
@@ -23,8 +34,8 @@ fn read_fifo(filename: String) -> Result<serde_json::Value, RequestError> {
     Ok(serde_json::from_reader(reader)?)
 }
 
-pub fn simple_request(endpoint: &str, body: impl Serialize) -> Result<(), RequestError> {
-    make_request(endpoint, body)?;
+pub fn simple_request(endpoint: &str, body: impl Serialize, method: HttpMethod) -> Result<(), RequestError> {
+    make_request(endpoint, body, method)?;
     Ok(())
 }
 
@@ -36,8 +47,9 @@ struct ValueResponse {
 pub fn sync_request(
     endpoint: &str,
     body: impl Serialize,
+    method: HttpMethod
 ) -> Result<serde_json::Value, RequestError> {
-    Ok(make_request(endpoint, body)?.json::<ValueResponse>()?.value)
+    Ok(make_request(endpoint, body, method)?.json::<ValueResponse>()?.value)
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -49,8 +61,9 @@ struct DaemonResponse {
 pub fn async_request(
     endpoint: &str,
     body: impl Serialize,
+    method: HttpMethod
 ) -> Result<serde_json::Value, RequestError> {
-    let filename = make_request(endpoint, body)?
+    let filename = make_request(endpoint, body, method)?
         .json::<DaemonResponse>()?
         .reply_filename;
 

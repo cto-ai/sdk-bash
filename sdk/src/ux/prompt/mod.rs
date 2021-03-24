@@ -25,7 +25,7 @@ pub trait Prompt<T: DeserializeOwned>: Serialize + Clone {
     fn name(&self) -> &str;
 
     fn execute(self) -> Result<T, RequestError> {
-        daemon::async_request("prompt", &self)
+        daemon::async_request("prompt", &self, daemon::HttpMethod::POST)
             .and_then(|value| {
                 value
                     .get(self.name())
