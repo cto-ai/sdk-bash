@@ -8,7 +8,7 @@ use commands::ux::secrets;
 use commands::ux::spinner;
 use commands::ux::track;
 use commands::ux::start;
-use commands::{config, state};
+use commands::{config, state, user};
 
 fn main() {
     let matches = App::new("CTO.ai Shell SDK")
@@ -26,6 +26,7 @@ fn main() {
         .subcommand(state::init_cli_command())
         .subcommand(track::init_cli_command())
         .subcommand(start::init_cli_command())
+        .subcommand(user::init_cli_command())
         .setting(clap::AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
@@ -41,6 +42,7 @@ fn main() {
         (state::CMD, Some(state_matches)) => state::run(state_matches),
         (track::CMD, Some(track_matches)) => track::run(track_matches),
         (start::CMD, Some(start_matches)) => start::run(start_matches),
+        (user::CMD, _) => user::run(),
         _ => unreachable!(),
     }
 }

@@ -1,6 +1,6 @@
 //! The SDK `sdk` module, just like other SDKs
 
-use crate::daemon::{simple_request, sync_request};
+use crate::daemon::{simple_request, sync_request, HttpMethod};
 use crate::RequestError;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::json;
@@ -31,6 +31,7 @@ pub fn get_all_state() -> Result<HashMap<String, serde_json::Value>, RequestErro
     Ok(serde_json::from_value(sync_request(
         "state/get-all",
         json!({}),
+        HttpMethod::POST,
     )?)?)
 }
 
@@ -38,6 +39,7 @@ pub fn get_all_config() -> Result<HashMap<String, String>, RequestError> {
     Ok(serde_json::from_value(sync_request(
         "config/get-all",
         json!({}),
+        HttpMethod::POST,
     )?)?)
 }
 
@@ -51,6 +53,7 @@ pub fn get_state<T: DeserializeOwned>(key: &str) -> Result<T, RequestError> {
     Ok(serde_json::from_value(sync_request(
         "state/get",
         KeyBody { key },
+        HttpMethod::POST,
     )?)?)
 }
 
@@ -58,6 +61,7 @@ pub fn get_config(key: &str) -> Result<Option<String>, RequestError> {
     Ok(serde_json::from_value(sync_request(
         "config/get",
         KeyBody { key },
+        HttpMethod::POST,
     )?)?)
 }
 
@@ -75,6 +79,7 @@ pub fn set_state(key: &str, value: impl Into<serde_json::Value>) -> Result<(), R
             key,
             value: value.into(),
         },
+        HttpMethod::POST,
     )
 }
 
@@ -85,6 +90,7 @@ pub fn set_config(key: &str, value: impl Into<serde_json::Value>) -> Result<(), 
             key,
             value: value.into(),
         },
+        HttpMethod::POST,
     )
 }
 
@@ -92,6 +98,7 @@ pub fn delete_config(key: &str) -> Result<bool, RequestError> {
     Ok(serde_json::from_value(sync_request(
         "config/delete",
         KeyBody { key },
+        HttpMethod::POST,
     )?)?)
 }
 
@@ -105,6 +112,7 @@ pub fn events(start: &str, end: &str) -> Result<Vec<serde_json::Value>, RequestE
     Ok(serde_json::from_value(sync_request(
         "events",
         EventsBody { start, end },
+        HttpMethod::POST,
     )?)?)
 }
 
@@ -150,7 +158,7 @@ impl<'a> Track<'a> {
     }
 
     pub fn send(self) -> Result<(), RequestError> {
-        simple_request("track", self)
+        simple_request("track", self, HttpMethod::POST)
     }
 }
 
@@ -170,6 +178,14 @@ impl<'a> StartOp<'a> {
     }
 
     pub fn send(self) -> Result<(), RequestError> {
-        simple_request("track", self)
+        simple_request("track", self, HttpMethod::POST)
     }
+}
+
+pub fn get_user() -> Result<Option<String>, RequestError> {
+    Ok(serde_json::from_value(sync_request(
+        "user",
+        json!({}),
+        HttpMethod::GET
+    )?)?)
 }

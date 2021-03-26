@@ -9,15 +9,27 @@ use serde::{Deserialize, Serialize};
 
 use crate::RequestError;
 
+/// Supported http methods by daemon endpoints.
+pub enum HttpMethod {
+    GET,
+    POST,
+}
+
 /// Make a request to the daemon API, given the endpoint and request body
-fn make_request(endpoint: &str, body: impl Serialize) -> Result<Response, RequestError> {
+fn make_request(endpoint: &str, body: impl Serialize, method: HttpMethod) -> Result<Response, RequestError> {
     let port = env::var("SDK_SPEAK_PORT").expect("SDK_SPEAK_PORT environment variable not set");
 
-    Ok(Client::new()
-        .post(&format!("http://localhost:{}/{}", port, endpoint))
-        .json(&body)
-        .send()?
-        .error_for_status()?)
+    match method {
+        HttpMethod::POST => Ok(Client::new()
+            .post(&format!("http://localhost:{}/{}", port, endpoint))
+            .json(&body)
+            .send()?
+            .error_for_status()?),
+        HttpMethod::GET => Ok(Client::new()
+            .get(&format!("http://localhost:{}/{}", port, endpoint))
+            .send()?
+            .error_for_status()?),
+    }
 }
 
 /// Read the JSON from the daemon async response fifo
@@ -28,8 +40,8 @@ fn read_fifo(filename: String) -> Result<serde_json::Value, RequestError> {
 }
 
 /// Make a request to the daemon expecting an empty response on success
-pub fn simple_request(endpoint: &str, body: impl Serialize) -> Result<(), RequestError> {
-    make_request(endpoint, body)?;
+pub fn simple_request(endpoint: &str, body: impl Serialize, method: HttpMethod) -> Result<(), RequestError> {
+    make_request(endpoint, body, method)?;
     Ok(())
 }
 
@@ -43,8 +55,9 @@ struct ValueResponse {
 pub fn sync_request(
     endpoint: &str,
     body: impl Serialize,
+    method: HttpMethod,
 ) -> Result<serde_json::Value, RequestError> {
-    Ok(make_request(endpoint, body)?.json::<ValueResponse>()?.value)
+    Ok(make_request(endpoint, body, method)?.json::<ValueResponse>()?.value)
 }
 
 /// The response body from the daemon when a value is returned through a named pipe
@@ -58,8 +71,9 @@ struct DaemonResponse {
 pub fn async_request(
     endpoint: &str,
     body: impl Serialize,
+    method: HttpMethod,
 ) -> Result<serde_json::Value, RequestError> {
-    let filename = make_request(endpoint, body)?
+    let filename = make_request(endpoint, body, method)?
         .json::<DaemonResponse>()?
         .reply_filename;
 

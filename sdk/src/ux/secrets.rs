@@ -1,4 +1,4 @@
-use crate::daemon::async_request;
+use crate::daemon::{async_request, HttpMethod};
 use crate::RequestError;
 use serde::Serialize;
 
@@ -20,7 +20,7 @@ impl<'a> GetSecret<'a> {
 
     pub fn execute(self) -> Result<String, RequestError> {
         let name = self.key;
-        async_request("secret/get", self)
+        async_request("secret/get", self, HttpMethod::POST)
             .and_then(|value| value.get(name).cloned().ok_or(RequestError::JsonKeyError))
             .and_then(|v| Ok(serde_json::from_value(v)?))
     }
@@ -71,7 +71,7 @@ impl<'a> Secrets<'a> {
     ) -> Result<serde_json::Value, RequestError> {
         self.name = Some(name);
         self.secret = Some(secret);
-        async_request("secret/set", self)
+        async_request("secret/set", self, HttpMethod::POST)
             .and_then(|value| value.get("key").cloned().ok_or(RequestError::JsonKeyError))
     }
 }

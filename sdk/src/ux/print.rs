@@ -1,4 +1,4 @@
-use crate::daemon::simple_request;
+use crate::daemon::{simple_request, HttpMethod};
 use crate::RequestError;
 
 use serde::Serialize;
@@ -17,7 +17,7 @@ struct Print<'a> {
 /// print("Some printed value");
 /// ```
 pub fn print(text: &str) -> Result<(), RequestError> {
-    simple_request("print", Print { text })?;
+    simple_request("print", Print { text }, HttpMethod::POST)?;
     Ok(())
 }
 

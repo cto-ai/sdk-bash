@@ -1,4 +1,4 @@
-use crate::daemon::simple_request;
+use crate::daemon::{simple_request, HttpMethod};
 use crate::RequestError;
 
 use serde::Serialize;
@@ -84,7 +84,7 @@ impl<'a> ProgressBar<'a> {
     /// progress_bar::ProgressBar::new(5).initial(0).message("Doing my complicated thing");
     /// ```
     pub fn start(self) -> Result<Self, RequestError> {
-        simple_request("progress-bar/start", self)?;
+        simple_request("progress-bar/start", self, HttpMethod::POST)?;
         Ok(self)
     }
 }
@@ -109,7 +109,7 @@ pub fn advance(value: Option<u64>) -> Result<(), RequestError> {
     if let Some(val) = value {
         pb = pb.increment_by(val);
     }
-    simple_request("progress-bar/advance", pb)
+    simple_request("progress-bar/advance", pb, HttpMethod::POST)
 }
 
 /// Completes the progress bar, incrementing it to 100% and optionally replacing
@@ -135,5 +135,5 @@ pub fn stop(message: Option<&str>) -> Result<(), RequestError> {
     if let Some(msg) = message {
         pb = pb.message(msg);
     }
-    simple_request("progress-bar/stop", pb)
+    simple_request("progress-bar/stop", pb, HttpMethod::POST)
 }
