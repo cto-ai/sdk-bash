@@ -57,7 +57,7 @@ build-branch:
   except:
     - master
   script:
-    - export CURRENT_VERSION="2.7.2-rc1"
+    - export CURRENT_VERSION=$(Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && temp="${value%\"}" && echo "${temp#\"}" && break; done)
     - docker login -u $PUBLIC_CI_USER -p $PUBLIC_CI_TOKEN $CI_PUBLIC_REGISTRY
     - docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG .
     - docker push $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG
