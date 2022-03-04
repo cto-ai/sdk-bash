@@ -16,8 +16,6 @@ jobs:
       
       - name: Before Script
         run: apk add -U openssh-client git make alpine-sdk
-
-      # Runs a set of commands using the runners shell
       - name: Version
         run: |
           - apk update && apk add git
@@ -27,7 +25,7 @@ jobs:
           - sh -c '[ "$1" != "$(echo -e "$1\n$2" | sort -V | head -n1)" ] && exit 0' sh "${CURRENT_VERSION}" "${MASTER_VERSION}"
           
   build:
-    runs-on: alpine:3.10
+    runs-on: docker:stable
     needs: test
     steps:
       - uses: actions/checkout@v2
