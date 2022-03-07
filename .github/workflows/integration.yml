@@ -24,4 +24,4 @@ jobs:
     - name: Docker Build
       run: |
         docker build -t bash-test --build-arg SDK_TAG=${{github.event.inputs.gitTag}} -f sdk-integration-testing/Dockerfile.bash sdk-integration-testing
-        docker run bassh-test
+        docker run bash-test
