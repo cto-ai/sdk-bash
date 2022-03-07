@@ -13,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Script
-        run: apk add -U openssh-client git make alpine-sdk
       - name: Version
         run: |
           export CURRENT_VERSION=$(cat Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && echo "${value}"&& break; done)
