@@ -21,7 +21,7 @@ jobs:
         run: |
           apk update && apk add git
           pwd
-          ls
+          ls -lha
           export CURRENT_VERSION=$(cat Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && echo "${value}"&& break; done)
           export MASTER_VERSION=$(git fetch && git --no-pager show origin/master:Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && echo "${value}" && break; done)
           echo -e "current is $CURRENT_VERSION\nmaster is $MASTER_VERSION"
@@ -37,7 +37,7 @@ jobs:
       - name: Build Branch
         run: |
           pwd
-          ls
+          ls -lha
           export CURRENT_VERSION=$(Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && temp="${value%\"}" && echo "${temp#\"}" && break; done)
           docker login -u $PUBLIC_CI_USER -p $PUBLIC_CI_TOKEN $CI_PUBLIC_REGISTRY
           docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG .
