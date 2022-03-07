@@ -19,6 +19,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Clone integration tests
       run: |
+        ls -lha
         git clone https://${{ secrets.CTO_PAT }}@github.com/cto-ai/sdk-integration-testing.git
     - name: Docker Build
       run: |
