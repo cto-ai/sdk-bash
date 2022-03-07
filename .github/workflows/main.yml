@@ -9,8 +9,7 @@ env:
   PUBLIC_CI_USER: ${{ secrets.PUBLIC_CI_USER }}
   PUBLIC_CI_TOKEN: ${{ secrets.PUBLIC_CI_TOKEN }}
   CI_PUBLIC_REGISTRY: ${{ secrets.CI_STG_PUBLIC_REGISTRY }}
-  IMAGE_NAME: $CI_PUBLIC_REGISTRY/official_images/bash
-
+  IMAGE_NAME: registry.cto.ai/official_images/bash
 
 jobs:
   test:
@@ -26,7 +25,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-#     container: docker:stable
+    #     container: docker:stable
     needs: test
     steps:
       - uses: actions/checkout@v2
@@ -35,7 +34,7 @@ jobs:
         run: |
           pwd
           ls -lha
-          export CURRENT_VERSION=$(Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && temp="${value%\"}" && echo "${temp#\"}" && break; done)
+          export CURRENT_VERSION=$(cat Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && temp="${value%\"}" && echo "${temp#\"}" && break; done)
           docker login -u $PUBLIC_CI_USER -p $PUBLIC_CI_TOKEN $CI_PUBLIC_REGISTRY
           docker build --build-arg SSH_GITLAB_KEY="$(cat ~/.ssh/id_rsa)" -t $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG .
           # docker push $IMAGE_NAME:$CURRENT_VERSION-$BUSTER_IMAGE_TAG
