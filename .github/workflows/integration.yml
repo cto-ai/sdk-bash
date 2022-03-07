@@ -1,1 +1,25 @@
 
+name: Integration Tests
+on:
+  workflow_dispatch:
+    inputs:
+      gitTag:
+        description: 'Tag version (e. 1.1.6)'
+        required: true
+
+env:
+  CI_USER: ${{ secrets.CI_USER }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+    - name: Clone integration tests
+      run: |
+        git clone https://${{ secrets.CTO_PAT }}@github.com/cto-ai/sdk-integration-testing.git
+    - name: Docker Build
+      run: |
+        docker build --build-arg SDK_TAG=${{github.event.inputs.gitTag}} -f sdk-integration-testing/Dockerfile.bash sdk-integration-testing
