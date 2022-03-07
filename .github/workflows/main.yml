@@ -20,6 +20,8 @@ jobs:
       - name: Version
         run: |
           apk update && apk add git
+          git status
+          git remote -v
           export CURRENT_VERSION=$(cat Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && echo "${value}"&& break; done)
           export MASTER_VERSION=$(git fetch && git --no-pager show origin/master:Cargo.toml | while IFS=" = " read -r name value; do [ "${name}" == "version" ] && echo "${value}" && break; done)
           echo -e "current is $CURRENT_VERSION\nmaster is $MASTER_VERSION"
