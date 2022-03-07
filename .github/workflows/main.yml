@@ -9,7 +9,7 @@ env:
   PUBLIC_CI_USER: ${{ secrets.PUBLIC_CI_USER }}
   PUBLIC_CI_TOKEN: ${{ secrets.PUBLIC_CI_TOKEN }}
   CI_PUBLIC_REGISTRY: ${{ secrets.CI_STG_PUBLIC_REGISTRY }}
-  IMAGE_NAME: ${{ CI_PUBLIC_REGISTRY }}/official_images/bash
+  IMAGE_NAME: registry.cto.ai/official_images/bash
 
 jobs:
   test:
