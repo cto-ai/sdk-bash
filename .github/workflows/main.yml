@@ -10,7 +10,7 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu:latest
     container: alpine:3.10
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
           sh -c '[ "$1" != "$(echo -e "$1\n$2" | sort -V | head -n1)" ] && exit 0' sh "${CURRENT_VERSION}" "${MASTER_VERSION}"
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu:latest
     container: docker:stable
     needs: test
     steps:
