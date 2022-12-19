@@ -15,13 +15,12 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
+    - name: Check out
+      uses: actions/checkout@v3
     - name: Clone integration tests
       run: |
-        ls -lha
         git clone https://${{ secrets.CTO_PAT }}@github.com/cto-ai/sdk-integration-testing.git
     - name: Docker Build
       run: |
         docker build -t bash-test --build-arg SDK_TAG=${{github.event.inputs.gitTag}} -f sdk-integration-testing/Dockerfile.bash sdk-integration-testing
-        docker run bash-test
+        docker run --rm bash-test

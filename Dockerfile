@@ -1,20 +1,55 @@
 ################################
-# Build the source code
-################################
-FROM rust:1.40 as build
+#   ____  _   _ ___ _     ____
+#  | __ )| | | |_ _| |   |  _ \
+#  |  _ \| | | || || |   | | | |
+#  | |_) | |_| || || |___| |_| |
+#  |____/ \___/|___|_____|____/
+#
+# Builder layer
+FROM rust:1.62 AS build
+
+## arm64 tweaks
+# context: https://github.com/docker/buildx/issues/359#issuecomment-1331443419
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
 
 WORKDIR sdk
 COPY . .
-RUN cargo build --release && strip /sdk/target/release/bash-sdk && strip /sdk/target/release/sdk && strip /sdk/target/release/ux
 
+## Setup git configurations
+# In reality, the token secret is not needed for sdk-bash
+# but it is left in case we need to fetch internal packages.
+RUN --mount=type=secret,id=GH_TOKEN \
+    git config --global url."https://$(cat /run/secrets/GH_TOKEN)@github.com/cto-ai".insteadOf "https://github.com/cto-ai" \
+    && git config --global url."https://$(cat /run/secrets/GH_TOKEN)@github.com".insteadOf "ssh://git@github.com"
 
-################################
-# Copy the bash sdk to the base image
-################################
-FROM registry.cto.ai/official_images/base:2-buster-slim
+RUN cargo build --release \
+    && strip /sdk/target/release/bash-sdk /sdk/target/release/sdk /sdk/target/release/ux \
+    && mv /sdk/target/release/bash-sdk /sdk/target/release/ctoai
 
-RUN apt-get update && \
-    apt-get install -y curl
+########################
+#   ____ ___ ____ _____
+#  |  _ \_ _/ ___|_   _|
+#  | | | | |\___ \ | |
+#  | |_| | | ___) || |
+#  |____/___|____/ |_|
+#
+# Binary distribution layer
+FROM scratch AS dist
 
-COPY --from=build /sdk/target/release/bash-sdk /usr/local/bin/ctoai
-COPY --from=build /sdk/target/release/sdk /sdk/target/release/ux /usr/local/bin/
+COPY --from=build /sdk/target/release/ctoai /sdk/target/release/sdk /sdk/target/release/ux /
+
+#########################
+#   ____  _______     __
+#  |  _ \| ____\ \   / /
+#  | | | |  _|  \ \ / /
+#  | |_| | |___  \ V /
+#  |____/|_____|  \_/
+#
+# SDK-bash image is no longer built from this repository,
+# however this stage could be used for dev purposes
+FROM debian:bullseye-slim
+
+RUN apt-get update \
+    && apt-get install -y curl
+
+COPY --from=build /sdk/target/release/ctoai /sdk/target/release/sdk /sdk/target/release/ux /usr/local/bin/
