@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if [ -z "${GH_TOKEN}" ]; then
-  echo 'GH_TOKEN env variable not found'
-  exit 1
-fi
-
 ARCH=${1:-amd64}
 OUTPUT_DIR=${2:-$(pwd)/dist}
 PLATFORMS=$(echo "${ARCH}" | sed -E -e 's#,#,linux/#g' -e 's#^#linux/#' -e 's#(linux/)+#linux/#g')
@@ -19,5 +14,4 @@ docker buildx build \
   --progress plain \
   --target dist \
   --output "type=local,dest=${OUTPUT_DIR}" \
-  --platform "${PLATFORMS}" \
-  --secret id=GH_TOKEN .
+  --platform "${PLATFORMS}" .

@@ -15,13 +15,6 @@ ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
 WORKDIR sdk
 COPY . .
 
-## Setup git configurations
-# In reality, the token secret is not needed for sdk-bash
-# but it is left in case we need to fetch internal packages.
-RUN --mount=type=secret,id=GH_TOKEN \
-    git config --global url."https://$(cat /run/secrets/GH_TOKEN)@github.com/cto-ai".insteadOf "https://github.com/cto-ai" \
-    && git config --global url."https://$(cat /run/secrets/GH_TOKEN)@github.com".insteadOf "ssh://git@github.com"
-
 RUN cargo build --release \
     && strip /sdk/target/release/bash-sdk /sdk/target/release/sdk /sdk/target/release/ux \
     && mv /sdk/target/release/bash-sdk /sdk/target/release/ctoai

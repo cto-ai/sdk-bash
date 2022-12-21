@@ -11,13 +11,10 @@ on:
         - arm64
         - amd64,arm64
   push:
-    branches-ignore:
-      - master
 
 env:
   DOCKER_DRIVER: overlay
   CARGO_NET_GIT_FETCH_WITH_CLI: true
-  GH_TOKEN: ${{ secrets.CTO_PAT }}
 
 jobs:
   test:
@@ -25,10 +22,6 @@ jobs:
     container: rust:1.62
     steps:
       - uses: actions/checkout@v3
-      - name: Setup
-        run: |
-          git config --global url.'https://${{ secrets.CTO_PAT }}@github.com/cto-ai'.insteadOf 'https://github.com/cto-ai'
-          git config --global url.'https://${{ secrets.CTO_PAT }}@github.com'.insteadOf 'ssh://git@github.com'
       - name: Lint
         run: |
           rustup component add clippy
@@ -47,14 +40,13 @@ jobs:
           ./scripts/build-setup
       - name: Build
         run: |
-          ./scripts/build ${{ github.event.inputs.arch }}
+          ./scripts/build ${{ inputs.arch }}
       - name: Package
         run: |
           ./scripts/package
-      - name: Publish
+      - name: Archive
         uses: actions/upload-artifact@v3
         with:
+          name: package
           retention-days: 1
-          path: |
-            dist/**/*
-            !dist/*.tar.gz
+          path: dist/*.tar.gz
