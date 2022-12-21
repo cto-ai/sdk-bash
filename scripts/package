@@ -5,7 +5,7 @@ TARGETS=$(find "${DIST_DIR}" -mindepth 1 -type d)
 
 for TARGET in ${TARGETS}; do
   ARCH=${TARGET//*_/}
-  tar -cvzf "${DIST_DIR}/sdk-bash-${ARCH}.tar.gz" \
+  tar -cvzf "${DIST_DIR}/sdk-bash-linux-${ARCH}.tar.gz" \
     --exclude='*.tar.gz' \
     -C "${TARGET}/" \
     $(find "${TARGET}" -mindepth 1 -maxdepth 1 -type f -exec basename {} \;)
