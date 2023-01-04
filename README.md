@@ -1,4 +1,4 @@
-![](https://cto.ai/static/sdk-banner.png)
+![SDK Bash](https://cto.ai/static/sdk-banner.png)
 
 SDK for creating ops using bash.
 

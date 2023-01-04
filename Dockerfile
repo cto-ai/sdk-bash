@@ -38,8 +38,8 @@ COPY --from=build /sdk/target/release/ctoai /sdk/target/release/sdk /sdk/target/
 #  | |_| | |___  \ V /
 #  |____/|_____|  \_/
 #
-# SDK-bash image is no longer built from this repository,
-# however this stage could be used for dev purposes
+# SDK-bash image is no longer built from this Dockerfile,
+# however the following stage could be used for dev purposes
 FROM debian:bullseye-slim
 
 RUN apt-get update \
