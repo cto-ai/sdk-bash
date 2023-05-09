@@ -3,11 +3,13 @@ mod get {
     use clap::{App, Arg};
     use cto_ai::sdk::{get_all_config, get_config};
 
+    pub const CMD: &str = "get";
+
     static KEY: &str = "key";
     static ALL: &str = "all";
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("get")
+        App::new(CMD)
             .about(descriptions::GET)
             .arg(
                 Arg::with_name(KEY)
@@ -29,7 +31,7 @@ mod get {
             let full_config = get_all_config().unwrap();
             println!("{}", serde_json::to_string_pretty(&full_config).unwrap());
         } else {
-          let final_value: Option<String> = get_config(matches.value_of(KEY).unwrap()).unwrap();
+            let final_value: Option<String> = get_config(matches.value_of(KEY).unwrap()).unwrap();
             match final_value {
                 None => println!(),
                 Some(s) => println!("{}", s),
@@ -43,11 +45,13 @@ mod set {
     use clap::{App, Arg};
     use cto_ai::sdk::set_config;
 
+    pub const CMD: &str = "set";
+
     static KEY: &str = "key";
     static VALUE: &str = "value";
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("set")
+        App::new(CMD)
             .about(descriptions::SET)
             .arg(
                 Arg::with_name(KEY)
@@ -82,10 +86,12 @@ mod delete {
     use clap::{App, Arg};
     use cto_ai::sdk::delete_config;
 
+    pub const CMD: &str = "delete";
+
     static KEY: &str = "key";
 
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("delete")
+        App::new(CMD)
             .about(descriptions::DELETE)
             .arg(
                 Arg::with_name(KEY)
@@ -105,8 +111,10 @@ mod delete {
 use crate::descriptions;
 use clap::{App, ArgMatches};
 
+pub const CMD: &str = "config";
+
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("config")
+    App::new(CMD)
         .about(descriptions::CONFIG)
         .subcommand(get::init_cli_command())
         .subcommand(set::init_cli_command())
@@ -115,9 +123,9 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 pub fn run(matches: &ArgMatches) {
     match matches.subcommand() {
-        ("get", Some(get_matches)) => get::run(get_matches),
-        ("set", Some(set_matches)) => set::run(set_matches),
-        ("delete", Some(delete_matches)) => delete::run(delete_matches),
+        (get::CMD, Some(get_matches)) => get::run(get_matches),
+        (set::CMD, Some(set_matches)) => set::run(set_matches),
+        (delete::CMD, Some(delete_matches)) => delete::run(delete_matches),
         _ => println!("Oops. No config command found"),
     }
 }

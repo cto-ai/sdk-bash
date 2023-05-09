@@ -1,4 +1,5 @@
 use clap::{crate_authors, crate_version, App};
+use commands::ux::format;
 use commands::ux::print;
 use commands::ux::progressbar;
 use commands::ux::prompt;
@@ -9,6 +10,7 @@ fn main() {
         .version(crate_version!())
         .author(crate_authors!())
         .about(commands::APP)
+        .subcommand(format::init_cli_command())
         .subcommand(print::init_cli_command())
         .subcommand(progressbar::init_cli_command())
         .subcommand(prompt::init_cli_command())
@@ -17,10 +19,11 @@ fn main() {
         .get_matches();
 
     match matches.subcommand() {
-        ("print", Some(print_matches)) => print::run(print_matches),
-        ("progressbar", Some(progressbar_matches)) => progressbar::run(progressbar_matches),
-        ("prompt", Some(prompt_matches)) => prompt::run(prompt_matches),
-        ("spinner", Some(spinner_matches)) => spinner::run(spinner_matches),
+        (format::CMD, Some(format_matches)) => format::run(format_matches),
+        (print::CMD, Some(print_matches)) => print::run(print_matches),
+        (progressbar::CMD, Some(progressbar_matches)) => progressbar::run(progressbar_matches),
+        (prompt::CMD, Some(prompt_matches)) => prompt::run(prompt_matches),
+        (spinner::CMD, Some(spinner_matches)) => spinner::run(spinner_matches),
         _ => unreachable!(),
     }
 }

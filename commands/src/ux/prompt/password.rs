@@ -3,11 +3,13 @@ use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{Password, Prompt};
 
+pub const CMD: &str = "password";
+
 static CONFIRM: &str = "confirm";
 
 // Init the cli commands for the Password prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("password")
+    App::new(CMD)
         .about(prompt::PASSWORD)
         .arg(
             Arg::with_name(NAME)

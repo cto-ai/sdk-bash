@@ -2,10 +2,11 @@ use crate::descriptions;
 use clap::{App, Arg, ArgMatches};
 use cto_ai::ux::print;
 
+pub const CMD: &str = "print";
 static TEXT: &str = "text";
 
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("print")
+    App::new(CMD)
         .about(descriptions::PRINT)
         .arg(Arg::with_name(TEXT).takes_value(true).multiple(true))
 }

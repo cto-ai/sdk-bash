@@ -3,11 +3,13 @@ mod start {
     use clap::{App, Arg};
     use cto_ai::ux::spinner;
 
+    pub const CMD: &str = "start";
+
     static MESSAGE: &str = "message";
 
     // Init the cli commands for spinner start
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("start").about(descriptions::START).arg(
+        App::new(CMD).about(descriptions::START).arg(
             Arg::with_name(MESSAGE)
                 .long(MESSAGE)
                 .short("m")
@@ -28,11 +30,15 @@ mod stop {
     use clap::{App, Arg};
     use cto_ai::ux::spinner;
 
+    pub const CMD: &str = "stop";
+
+    static MESSAGE: &str = "message";
+
     // Init the cli commands for spinner stop
     pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-        App::new("stop").about(descriptions::STOP).arg(
-            Arg::with_name("message")
-                .long("message")
+        App::new(CMD).about(descriptions::STOP).arg(
+            Arg::with_name(MESSAGE)
+                .long(MESSAGE)
                 .short("m")
                 .help("Message to be displayed with the stopped spinner")
                 .value_name("MESSAGE")
@@ -42,15 +48,17 @@ mod stop {
 
     // Runs the spinner stop
     pub fn run(matches: &clap::ArgMatches) {
-        spinner::stop(matches.value_of("message").unwrap()).unwrap();
+        spinner::stop(matches.value_of(MESSAGE).unwrap()).unwrap();
     }
 }
 
 use crate::descriptions;
 use clap::{App, ArgMatches};
 
+pub const CMD: &str = "spinner";
+
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("spinner")
+    App::new(CMD)
         .about(descriptions::SPINNER)
         .subcommand(start::init_cli_command())
         .subcommand(stop::init_cli_command())
@@ -58,8 +66,8 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 pub fn run(matches: &ArgMatches) {
     match matches.subcommand() {
-        ("start", Some(start_matches)) => start::run(start_matches),
-        ("stop", Some(stop_matches)) => stop::run(stop_matches),
+        (start::CMD, Some(start_matches)) => start::run(start_matches),
+        (stop::CMD, Some(stop_matches)) => stop::run(stop_matches),
         _ => println!("Oops. No spinner command found"),
     }
 }

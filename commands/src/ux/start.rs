@@ -2,11 +2,12 @@ use crate::descriptions;
 use clap::{App, Arg, ArgMatches};
 use cto_ai::sdk::StartOp;
 
+pub const CMD: &str = "start";
 static WORKFLOW_NAME: &str = "workflowName";
 
 
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("start")
+    App::new(CMD)
         .about(descriptions::START_OP)
         .arg(
             Arg::with_name(WORKFLOW_NAME)

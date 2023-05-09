@@ -3,12 +3,14 @@ use crate::descriptions::prompt;
 use clap::{App, Arg};
 use cto_ai::ux::prompt::{List, Prompt};
 
+pub const CMD: &str = "list";
+
 static CHOICES: &str = "choices";
 static AUTOCOMPLETE: &str = "autocomplete";
 
 // Init the cli commands for the List prompt
 pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
-    App::new("list")
+    App::new(CMD)
         .about(prompt::LIST)
         .arg(
             Arg::with_name(NAME)
