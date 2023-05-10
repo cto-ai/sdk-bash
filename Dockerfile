@@ -6,7 +6,7 @@
 #  |____/ \___/|___|_____|____/
 #
 # Builder layer
-FROM rust:1.62 AS build
+FROM rust:1.69 AS build
 
 ## arm64 tweaks
 # context: https://github.com/docker/buildx/issues/359#issuecomment-1331443419
@@ -16,8 +16,7 @@ WORKDIR sdk
 COPY . .
 
 RUN cargo build --release \
-    && strip /sdk/target/release/bash-sdk /sdk/target/release/sdk /sdk/target/release/ux \
-    && mv /sdk/target/release/bash-sdk /sdk/target/release/ctoai
+    && strip /sdk/target/release/ctoai /sdk/target/release/sdk /sdk/target/release/ux
 
 ########################
 #   ____ ___ ____ _____

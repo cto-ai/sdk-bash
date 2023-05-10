@@ -36,7 +36,7 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 // Runs the print command
 pub fn run(matches: &ArgMatches) {
-    let mut track = Track::new(&matches.value_of(EVENT).unwrap());
+    let mut track = Track::new(matches.value_of(EVENT).unwrap());
 
     if let Some(error) = matches.value_of(ERROR) {
         track = track.error(error);

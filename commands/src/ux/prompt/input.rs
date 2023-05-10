@@ -57,7 +57,7 @@ pub fn run(matches: &clap::ArgMatches) {
     );
 
     if let Some(default) = matches.value_of(DEFAULT) {
-        input = input.default_value(&default);
+        input = input.default_value(default);
     }
 
     if matches.is_present(ALLOW_EMPTY) {

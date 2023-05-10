@@ -20,6 +20,6 @@ pub fn init_cli_command<'a, 'b>() -> App<'a, 'b> {
 
 // Runs the print command
 pub fn run(matches: &ArgMatches) {
-    let start = StartOp::new(&matches.value_of(WORKFLOW_NAME).unwrap());
+    let start = StartOp::new(matches.value_of(WORKFLOW_NAME).unwrap());
     start.send().unwrap();
 }
