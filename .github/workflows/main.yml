@@ -19,7 +19,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: rust:1.62
+    container: rust:1.69
     steps:
       - uses: actions/checkout@v3
       - name: Lint

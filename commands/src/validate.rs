@@ -1,7 +1,6 @@
 pub fn positive_number(input: String) -> Result<(), String> {
     let value: i64 = input
-        .parse()
-        .or_else(|_| Err("Must be an integer".to_owned()))?;
+        .parse().map_err(|_| "Must be an integer".to_owned())?;
 
     if value > 0 {
         Ok(())
@@ -12,8 +11,7 @@ pub fn positive_number(input: String) -> Result<(), String> {
 
 pub fn positive_or_zero(input: String) -> Result<(), String> {
     let value: i64 = input
-        .parse()
-        .or_else(|_| Err("Must be an integer".to_owned()))?;
+        .parse().map_err(|_| "Must be an integer".to_owned())?;
 
     if value >= 0 {
         Ok(())
@@ -24,14 +22,7 @@ pub fn positive_or_zero(input: String) -> Result<(), String> {
 
 pub fn numeric(input: String) -> Result<(), String> {
     let _value: i64 = input
-        .parse()
-        .or_else(|_| Err("Must be an integer".to_owned()))?;
-    Ok(())
-}
-
-pub fn datetime(input: String) -> Result<(), String> {
-    let _value = chrono::DateTime::parse_from_rfc3339(&input)
-        .or_else(|_| Err("Must be a valid RFC3339 timestamp".to_owned()))?;
+        .parse().map_err(|_| "Must be an integer".to_owned())?;
     Ok(())
 }
 

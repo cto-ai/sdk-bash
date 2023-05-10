@@ -104,7 +104,7 @@ mod delete {
 
     pub fn run(matches: &clap::ArgMatches) {
         let final_value = delete_config(matches.value_of(KEY).unwrap()).unwrap();
-        println!("{}", final_value.to_string())
+        println!("{}", final_value)
     }
 }
 

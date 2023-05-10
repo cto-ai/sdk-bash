@@ -22,5 +22,5 @@ jobs:
         git clone https://${{ secrets.CTO_PAT }}@github.com/cto-ai/sdk-integration-testing.git
     - name: Docker Build
       run: |
-        docker build -t bash-test --build-arg SDK_TAG=${{github.event.inputs.gitTag}} -f sdk-integration-testing/Dockerfile.bash sdk-integration-testing
+        docker build -t bash-test --build-arg SDK_VERSION=${{github.event.inputs.gitTag}} -f sdk-integration-testing/Dockerfile.bash sdk-integration-testing
         docker run --rm bash-test

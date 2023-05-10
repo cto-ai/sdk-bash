@@ -35,7 +35,7 @@ pub fn run(matches: &ArgMatches) {
         .map(|e| e.to_owned())
         .unwrap_or_else(|| Local::now().to_rfc3339());
 
-    let event_list = events(&start, &end).unwrap();
+    let event_list = events(start, &end).unwrap();
 
     println!("{}", serde_json::to_string_pretty(&event_list).unwrap())
 }

@@ -36,7 +36,7 @@ mod get {
             match final_value {
                 None => println!(),
                 Some(serde_json::Value::String(s)) => println!("{}", s),
-                Some(v) => println!("{}", v.to_string()),
+                Some(v) => println!("{}", v),
             }
         }
     }

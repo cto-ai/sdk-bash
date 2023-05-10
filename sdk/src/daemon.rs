@@ -22,7 +22,7 @@ fn make_request(endpoint: &str, body: impl Serialize) -> Result<Response, Reques
 
 /// Read the JSON from the daemon async response fifo
 fn read_fifo(filename: String) -> Result<serde_json::Value, RequestError> {
-    let file = File::open(&filename)?;
+    let file = File::open(filename)?;
     let reader = BufReader::new(file);
     Ok(serde_json::from_reader(reader)?)
 }
@@ -63,5 +63,5 @@ pub fn async_request(
         .json::<DaemonResponse>()?
         .reply_filename;
 
-    Ok(read_fifo(filename)?)
+    read_fifo(filename)
 }
