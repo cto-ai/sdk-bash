@@ -6,9 +6,6 @@ on:
   # Workflow dispatch should be used only as fallback method
   workflow_dispatch:
     inputs:
-      version:
-        description: 'version to be released'
-        required: true
       arch:
         description: 'Target chipset arch list'
         default: 'amd64,arm64'
