@@ -11,6 +11,8 @@ on:
         - arm64
         - amd64,arm64
   push:
+    tags-ignore:
+      - '**'
 
 env:
   DOCKER_DRIVER: overlay
