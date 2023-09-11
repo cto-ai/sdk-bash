@@ -17,11 +17,12 @@ on:
 env:
   DOCKER_DRIVER: overlay
   CARGO_NET_GIT_FETCH_WITH_CLI: true
+  CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: aarch64-linux-gnu-gcc
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: rust:1.69
+    container: rust:1.72
     steps:
       - uses: actions/checkout@v3
       - name: Lint
@@ -34,18 +35,34 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    container: rust:1.72
     needs: test
     steps:
       - uses: actions/checkout@v3
       - name: Setup
         run: |
-          ./scripts/build-setup
-      - name: Build
+          rustup target add x86_64-unknown-linux-musl
+          rustup target add aarch64-unknown-linux-musl
+
+          apt-get update
+          apt-get install -y musl-tools musl-dev
+
+          if [ '${{ contains(inputs.arch, 'arm64') }}' = 'true' ]; then
+            apt-get install -y gcc-aarch64-linux-gnu
+          fi
+
+      - name: Build & package amd64
+        if: ${{ contains(inputs.arch, 'amd64') }}
         run: |
-          ./scripts/build ${{ inputs.arch }}
-      - name: Package
+          cargo build --release --target x86_64-unknown-linux-musl
+          ./scripts/package ./dist ./target/x86_64-unknown-linux-musl/release
+
+      - name: Build & package arm64
+        if: ${{ contains(inputs.arch, 'arm64') }}
         run: |
-          ./scripts/package
+          cargo build --release --target aarch64-unknown-linux-musl
+          ./scripts/package ./dist ./target/aarch64-unknown-linux-musl/release
+
       - name: Archive
         uses: actions/upload-artifact@v3
         with:

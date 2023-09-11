@@ -1,12 +1,15 @@
-################################
-#   ____  _   _ ___ _     ____
-#  | __ )| | | |_ _| |   |  _ \
-#  |  _ \| | | || || |   | | | |
-#  | |_) | |_| || || |___| |_| |
-#  |____/ \___/|___|_____|____/
+#########################
+#   ____  _______     __
+#  |  _ \| ____\ \   / /
+#  | | | |  _|  \ \ / /
+#  | |_| | |___  \ V /
+#  |____/|_____|  \_/
 #
+# CTO.ai SDK-bash image is no longer built from this Dockerfile,
+# However feel free to use it for dev purposes
+
 # Builder layer
-FROM rust:1.69 AS build
+FROM rust:1.72 AS build
 
 ## arm64 tweaks
 # context: https://github.com/docker/buildx/issues/359#issuecomment-1331443419
@@ -18,27 +21,11 @@ COPY . .
 RUN cargo build --release \
     && strip /sdk/target/release/ctoai /sdk/target/release/sdk /sdk/target/release/ux
 
-########################
-#   ____ ___ ____ _____
-#  |  _ \_ _/ ___|_   _|
-#  | | | | |\___ \ | |
-#  | |_| | | ___) || |
-#  |____/___|____/ |_|
-#
 # Binary distribution layer
 FROM scratch AS dist
 
 COPY --from=build /sdk/target/release/ctoai /sdk/target/release/sdk /sdk/target/release/ux /
 
-#########################
-#   ____  _______     __
-#  |  _ \| ____\ \   / /
-#  | | | |  _|  \ \ / /
-#  | |_| | |___  \ V /
-#  |____/|_____|  \_/
-#
-# SDK-bash image is no longer built from this Dockerfile,
-# however the following stage could be used for dev purposes
 FROM debian:bullseye-slim
 
 RUN apt-get update \

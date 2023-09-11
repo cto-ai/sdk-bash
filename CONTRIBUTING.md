@@ -1,8 +1,8 @@
 # Contributing
 
-Thanks for taking the time to contribute to SDK Bash!
+Thanks for taking the time to contribute to SDK Bash! 🎉🎉🎉
 
-This Bash SDK is a group of binaries enabling users to interact with the CTO.ai
+The Bash SDK is a group of binaries enabling users to interact with the CTO.ai
 API within their workflows. These binaries are written in Rust, so using `cargo`
 for the development cycle should suffice; however, we would like to share some
 details to help you with your contribution.
@@ -35,13 +35,19 @@ Rust libraries. Required parameters are provided to the initial
 constructor and optional parameters through method calls on the
 builder struct.
 
-## Build and release process
+## Build and release processes
 
-The Bash SDK binaries are automatically built and packaged as `tar.gz` by the
-GitHub Workflows within this repository, on every pushed commit. The build logic is
-distributed across the `scripts/build*` scripts, which make use of `docker buildx` to
-cross compile the binaries. However, for local development, using `cargo build` should suffice.
+The Bash SDK binaries are cross-compiled for `x86_64` (AKA `amd64`) and `arm64`
+(e.g.: Apple Silicon M1) chipset architectures, making use of the
+[musl](https://musl.libc.org/) C standard library to get self-contained
+artifacts. The build logic around said artifacts lies on the GitHub workflows
+within this repository; however, for contributions running `cargo clippy`,
+`cargo test`, and `cargo build --release` locally is more than okay to test out
+new changes.
 
-When the master branch is tagged with a new version (which must match the
-version in the root `Cargo.toml` configuration), a new release is built. The
-resulting artifacts will be published through the **Releases** of this repo.
+A new release binary is cut when the `release` workflow is triggered from a
+pre-existing git tag, which must match the version in the root `Cargo.toml`
+file. When said pipeline successfully finishes, the resulting artifacts will be
+published as a pre-release in the
+[Releases](https://github.com/cto-ai/sdk-bash/releases) section. The maintainers
+will manually remove the pre-release check when needed.
