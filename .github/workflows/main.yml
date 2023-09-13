@@ -14,11 +14,6 @@ on:
     tags-ignore:
       - '**'
 
-env:
-  DOCKER_DRIVER: overlay
-  CARGO_NET_GIT_FETCH_WITH_CLI: true
-  CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: aarch64-linux-gnu-gcc
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -34,38 +29,8 @@ jobs:
           cargo test
 
   build:
-    runs-on: ubuntu-latest
-    container: rust:1.72
     needs: test
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup
-        run: |
-          rustup target add x86_64-unknown-linux-musl
-          rustup target add aarch64-unknown-linux-musl
-
-          apt-get update
-          apt-get install -y musl-tools musl-dev
-
-          if [ '${{ contains(inputs.arch, 'arm64') }}' = 'true' ]; then
-            apt-get install -y gcc-aarch64-linux-gnu
-          fi
-
-      - name: Build & package amd64
-        if: ${{ contains(inputs.arch, 'amd64') }}
-        run: |
-          cargo build --release --target x86_64-unknown-linux-musl
-          ./scripts/package ./dist ./target/x86_64-unknown-linux-musl/release
-
-      - name: Build & package arm64
-        if: ${{ contains(inputs.arch, 'arm64') }}
-        run: |
-          cargo build --release --target aarch64-unknown-linux-musl
-          ./scripts/package ./dist ./target/aarch64-unknown-linux-musl/release
-
-      - name: Archive
-        uses: actions/upload-artifact@v3
-        with:
-          name: package
-          retention-days: 1
-          path: dist/*.tar.gz
+    uses: ./.github/workflows/wc_build_binaries.yml
+    with:
+      arch: ${{ inputs.arch }}
+      artifact_retention: 1
