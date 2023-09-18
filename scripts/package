@@ -1,12 +1,18 @@
 #!/bin/bash
 
-DIST_DIR=${1:-$(pwd)/dist}
-TARGETS=$(find "${DIST_DIR}" -mindepth 1 -type d)
+TARGETS="${1:-$(pwd)/dist}"
+DIST_DIR="${2:-$(pwd)/dist}"
+
+[ -d "${DIST_DIR}" ] || mkdir "${DIST_DIR}"
 
 for TARGET in ${TARGETS}; do
-  ARCH=${TARGET//*_/}
+  ARCH='amd64'
+  if echo "${TARGET}" | grep -q 'aarch64'; then
+    ARCH='arm64'
+  fi
+
   tar -cvzf "${DIST_DIR}/sdk-bash-linux-${ARCH}.tar.gz" \
     --exclude='*.tar.gz' \
     -C "${TARGET}/" \
-    $(find "${TARGET}" -mindepth 1 -maxdepth 1 -type f -exec basename {} \;)
+    $(find "${TARGET}" -mindepth 1 -maxdepth 1 -type f -executable -printf '%P\n')
 done

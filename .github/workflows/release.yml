@@ -1,9 +1,6 @@
 name: Release
 on:
-  push:
-    tags:
-      - "v*"
-  # Workflow dispatch should be used only as fallback method
+  # Remember to select a Git tag otherwise the workflow will fail
   workflow_dispatch:
     inputs:
       arch:
@@ -20,37 +17,33 @@ env:
   CARGO_NET_GIT_FETCH_WITH_CLI: true
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Check version
         run: |
-          VERSION_IN_CARGO=$(find . -type f -name 'Cargo.toml' -exec grep -oP '^\W*version\W*\K[0-9\.]+' {} \; | sort -nru | head -1)
+          VERSION_IN_CARGO=$(find . -type f -name 'Cargo.toml' -exec grep -oP '^\W*version\W*\K[0-9\.\-rc]+' {} \; | sort -nru | head -1)
           GIT_TAG='${{ github.ref_name }}'
 
-          if [ "${GIT_TAG/#v/}" != "${VERSION_IN_CARGO}" ]; then
-            echo 'git tag and Cargo.toml version mismatch'
-            echo "${GIT_TAG/#v/} != ${VERSION_IN_CARGO}"
+          if [[ "${GIT_TAG/#v/}" != "${VERSION_IN_CARGO}" ]]; then
+            echo 'Version mismatch between git tag and Cargo.toml'
+              echo "git:   ${GIT_TAG/#v/}"
+              echo "cargo: ${VERSION_IN_CARGO}"
             echo ''
-            echo 'REMINDER: Git tags must start with "v"'
+            echo 'REMINDERS:'
+            echo '  - This workflow must be triggered from a Git tag'
+            echo '  - Git tags must start with "v"'
             exit 1
           fi
-      - name: Setup
-        run: |
-          ./scripts/build-setup
-      - name: Build
-        run: |
-          ./scripts/build ${{ inputs.arch }}
-      - name: Package
-        run: |
-          ./scripts/package
-      - name: Archive
-        uses: actions/upload-artifact@v3
-        with:
-          name: package
-          retention-days: 7
-          path: dist/*.tar.gz
+        shell: bash
+
+  build:
+    needs: check
+    uses: ./.github/workflows/wc_build_binaries.yml
+    with:
+      arch: ${{ inputs.arch }}
+      artifact_retention: 7
 
   release:
     runs-on: ubuntu-latest
@@ -64,5 +57,6 @@ jobs:
       - name: Publish release
         uses: softprops/action-gh-release@v1
         with:
+          prerelease: true
           files: |
             dist/*.tar.gz
